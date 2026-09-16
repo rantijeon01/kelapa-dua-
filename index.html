@@ -1,0 +1,2992 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Peminjaman Buku</title>
+
+<style>
+
+body{
+  font-family: Arial;
+  background-image:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f');
+  background-size:cover;
+  background-position:center;
+  margin:0;
+  color:white;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:10px;
+  padding-bottom:100px;
+}
+
+.card{
+  background:rgba(0,0,0,0.7);
+  padding:20px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+h2{
+  text-align:center;
+  color:pink;
+}
+
+h3{
+  color:pink;
+  margin-top:25px;
+}
+
+label{
+  display:block;
+  margin-top:10px;
+  color:pink;
+}
+
+input, textarea, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:5px;
+  border:none;
+  box-sizing:border-box;
+}
+
+.btn{
+  background:black;
+  color:pink;
+  border:2px solid pink;
+  padding:10px;
+  border-radius:5px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.btn:hover{
+  background:pink;
+  color:black;
+}
+
+.books{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+}
+
+.book{
+  text-align:center;
+  cursor:pointer;
+}
+
+.book img{
+  width:120px;
+  height:170px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid pink;
+}
+
+.book p{
+  margin-top:5px;
+  font-size:14px;
+}
+
+.hidden{
+  display:none;
+}
+
+.footer-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:black;
+  text-align:center;
+  padding:5px 0;
+}
+
+/* CHAT */
+
+#chatBox{
+  height:250px;
+  overflow-y:auto;
+  background:#e5ddd5;
+  border-radius:10px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+}
+
+.chat{
+  max-width:70%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:10px;
+}
+
+.user{
+  background:#25d366;
+  color:black;
+  align-self:flex-end;
+}
+
+.bot{
+  background:white;
+  color:black;
+  align-self:flex-start;
+}
+
+#loginPage{
+  width:90%;
+  max-width:350px;
+  margin:30px auto;
+}
+
+#loginPage .btn{
+  width:100%;
+}
+
+</style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+<div id="loginPage" class="card">
+
+<h2 style="text-align:center;">
+📚 Selamat Datang
+</h2>
+
+<br>
+
+<div style="text-align:center;">
+<img src="https://iili.io/CfHAQpt.png" alt="Logo SMPN 2 Kelapa Dua" width="120">
+</div>
+
+<br>
+
+<div style="text-align:center;">
+Perpustakaan SMPN 2 Kelapa Dua
+</div>
+
+<label>Username</label>
+<input type="text" id="loginUser" placeholder="Masukkan Username">
+
+<label>Password</label>
+<input type="password" id="loginPass" placeholder="Masukkan Password">
+
+<button class="btn" onclick="login()">Login</button>
+
+</div>
+
+<div class="container hidden" id="mainApp">
+
+
+<!-- FORM -->
+<div id="formPage" class="card">
+
+<h2>Form Peminjaman</h2>
+
+<label>Nama</label>
+<input id="nama" placeholder="Masukkan Nama">
+
+<label>Usia</label>
+<input id="usia" placeholder="Masukkan Usia">
+
+<label>Alamat</label>
+<input id="alamat" placeholder="Masukkan Alamat">
+
+<label>Jenis Kelamin</label>
+<select id="jenis_kelamin">
+<option value="">-- Pilih Jenis Kelamin --</option>
+<option value="Laki-laki">Laki-laki</option>
+<option value="Perempuan">Perempuan</option>
+</select>
+
+<label>Tanggal Pinjam</label>
+<input type="date" id="tglPinjam">
+
+<label>Tanggal Kembali</label>
+<input type="date" id="tglKembali" readonly>
+
+<label>Keperluan</label>
+<textarea id="keperluan" placeholder="Keperluan"></textarea>
+
+<button class="btn" onclick="lanjut()">Simpan</button>
+
+</div>
+
+<!-- PILIH BUKU -->
+<div id="bukuPage" class="card hidden">
+
+<h2>Pilih Buku</h2>
+
+<input
+  type="text"
+  id="searchBook"
+  placeholder="🔍 Cari judul buku..."
+  onkeyup="cariBuku()"
+  style="margin-bottom:20px;"
+>
+
+
+<!-- BAHASA INGGRIS -->
+<h3>📘 Bahasa Inggris</h3>
+
+<div class="books">
+
+<div class="book" data-title="English Is Fun">
+<img src="https://iili.io/C3Kohj1.jpg">
+<p>English Is Fun</p>
+</div>
+
+<div class="book" data-title="Always English">
+<img src="https://iili.io/C3KxB9V.jpg">
+<p>Always English</p>
+</div>
+
+<div class="book" data-title="I Love English">
+<img src="https://iili.io/C3KT5Sj.jpg">
+<p>I Love English</p>
+</div>
+
+<div class="book" data-title="Speak English">
+<img src="https://iili.io/C3KuvmQ.jpg">
+<p>Speak English</p>
+</div>
+
+<div class="book" data-title="English Is Cool">
+<img src="https://iili.io/C3KAtcu.jpg">
+<p>English Is Cool</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris">
+<img src="https://iili.io/C3KCglR.jpg">
+<p>Bahasa Inggris</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris 8">
+<img src="https://i.ibb.co.com/Q7NPzp07/7b.jpg">
+<p>Bahasa Inggris 8</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris Kelas 9">
+<img src="https://i.ibb.co.com/m5H607pj/bahasa-inggris-kelas-9.jpg">
+<p>Bahasa Inggris Kelas 9</p>
+</div>
+
+<div class="book" data-title="Cerdas Bahasa Inggris kelas 8">
+<img src="https://i.ibb.co.com/4wc2Cwp4/cerdas-8.jpg">
+<p>Cerdas Bahasa Inggris kelas 8</p>
+</div>
+
+<div class="book" data-title="Briliant step 8">
+<img src="https://i.ibb.co.com/gZFPFF3R/briliant-step-8.jpg">
+<p>Briliant step 8</p>
+</div>
+
+<div class="book" data-title="English For Nusantara">
+<img src="https://i.ibb.co.com/0V6xmLQ9/for-nusantara.jpg">
+<p>English For Nusantara</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris 7">
+<img src="https://i.ibb.co.com/wZ1zkh4M/jelajah-ilmu.jpg">
+<p>Bahasa Inggris 7</p>
+</div>
+
+<div class="book" data-title="When english rings a bell">
+<img src="https://i.ibb.co.com/Gfh55MRt/kelas.jpg">
+<p>When english rings a bell</p>
+</div>
+
+<div class="book" data-title="Mandiri Plus">
+<img src="https://i.ibb.co.com/HpYzzX7s/mandiri-plus-inggris.png" >
+<p>Mandiri Plus</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris">
+<img src="https://i.ibb.co.com/d4x43MsC/smp.jpg" >
+<p>Bahasa Inggris</p>
+</div>
+
+<div class="book" data-title="Buku Klasik">
+<img src="https://i.ibb.co.com/KpfS9J2y/buku-klasik.jpg" >
+<p>Buku Klasik</p>
+</div>
+
+<div class="book" data-title="Mahir Bahasa Inggris">
+<img src="https://i.ibb.co.com/gFZX0b4X/mahir-bahasa-inggris.jpg" >
+<p>Mahir Bahasa Inggris</p>
+</div>
+
+<div class="book" data-title="Belajar Bahasa Inggris Dengan Praktis">
+<img src="https://i.ibb.co.com/wFSFZB8Q/images-jpbahasa-inggris-lengkap.jpg" >
+<p>Belajar Bahasa Inggris Dengan Praktis</p>
+</div>
+
+<div class="book" data-title="Soal Bahasa Inggris">
+<img src="https://i.ibb.co.com/jvtQqHKc/mega-bang-soal-bahasa-inggris.jpg" >
+<p>Soal Bahasa Inggris</p>
+</div>
+
+<div class="book" data-title="Bahasa Inggris">
+<img src="https://i.ibb.co.com/qLjDQWMn/hewan.jpg" >
+<p>Bahasa Inggris</p>
+</div>
+
+</div>
+
+<!-- NOVEL -->
+<h3>📖 Novel</h3>
+
+<div class="books">
+
+<div class="book" data-title="Anak Negri">
+<img src="https://i.ibb.co.com/chFbPnk5/anak-negri.jpg" >
+<p>Anak Negri</p>
+</div>
+
+<div class="book" data-title="dari Jendela SMP">
+<img src="https://i.ibb.co.com/qFV23rfY/dari-jendela-smp.jpg" >
+<p>dari Jendela SMP</p>
+</div>
+
+<div class="book" data-title="Kala Senja Menyapa">
+<img src="https://i.ibb.co.com/JWgcPWTZ/kala-senja-menyapa.jpg" >
+<p>Kala Senja Menyapa</p>
+</div>
+
+<div class="book" data-title="Now I Know">
+<img src="https://i.ibb.co.com/VWSFxYtC/now-i-know.jpg" >
+<p>Now I Know</p>
+</div>
+
+<div class="book" data-title="Legenda Rawa Pening">
+<img src="https://i.ibb.co.com/wrZQLLRD/rawa-pening.jpg" >
+<p>Legenda Rawa Pening</p>
+</div>
+
+<div class="book" data-title="Rinjani">
+<img src="https://i.ibb.co.com/WNf9vGw9/rinjani.jpg" >
+<p>Rinjani</p>
+</div>
+
+<div class="book" data-title="Saat Bersamamu">
+<img src="https://i.ibb.co.com/Jjm9BZXd/saat-bersamamu.jpg" >
+<p>Saat Bersamamu</p>
+</div>
+
+<div class="book" data-title="Sahabat Jadi Cinta">
+<img src="https://i.ibb.co.com/svqNcm9K/sahabat-jadi-cinta.jpg" >
+<p>Sahabat Jadi Cinta</p>
+</div>
+
+<div class="book" data-title="Sekolah Untuk Timur">
+<img src="https://i.ibb.co.com/CpVKsPLk/sekolah-untuk-timur.jpg" >
+<p>Sekolah Untuk Timur</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="book" data-title="Takdir Yang Terkoyak">
+<img src="https://iili.io/C3K7Vyb.jpg">
+<p>Takdir Yang Terkoyak</p>
+</div>
+
+<div class="book" data-title="Delisa">
+<img src="https://iili.io/C3Ka07e.jpg">
+<p>Delisa</p>
+</div>
+
+<div class="book" data-title="Kisah Mukjizat Nabi">
+<img src="https://iili.io/C3Kc3ve.jpg">
+<p>Kisah Mukjizat Nabi</p>
+</div>
+
+<div class="book" data-title="Balon Merah">
+<img src="https://iili.io/C3KcyNa.jpg">
+<p>Balon Merah</p>
+</div>
+
+<div class="book" data-title="Tahajud Cinta">
+<img src="https://iili.io/C3K0KLx.jpg">
+<p>Tahajud Cinta</p>
+</div>
+
+<div class="book" data-title="Rasa Hati">
+<img src="https://iili.io/C3K0ZyF.jpg">
+<p>Rasa Hati</p>
+</div>
+
+<div class="book" data-title="Anak Jalanan">
+<img src="https://iili.io/C3KEBHP.jpg">
+<p>Anak Jalanan</p>
+</div>
+
+<div class="book" data-title="Rumah Tanpa Jendela">
+<img src="https://iili.io/C3KGO2p.jpg">
+<p>Rumah Tanpa Jendela</p>
+</div>
+
+<div class="book" data-title="Rindu Ibu">
+<img src="https://iili.io/C3KMOMb.jpg">
+<p>Rindu Ibu</p>
+</div>
+
+<div class="book" data-title="Semeliar Cinta Untuk Bunda">
+<img src="https://iili.io/C3KVa5B.jpg">
+<p>Semeliar Cinta Untuk Bunda</p>
+</div>
+
+<div class="book" data-title="Kantorku Surgaku">
+<img src="https://iili.io/C3KW7Bs.jpg">
+<p>Kantorku Surgaku</p>
+</div>
+
+<div class="book" data-title="Keluarga Cemara">
+<img src="https://iili.io/C3KYnNj.jpg">
+<p>Keluarg Cemara</p>
+</div>
+
+</div>
+
+<!-- IPA -->
+<h3>🔬 IPA</h3>
+
+<div class="books">
+
+<div class="book" data-title="Mengenal Rangka Tubuh">
+<img src="https://iili.io/C3KhW0b.jpg">
+<p>Mengenal Rangka Tubuh</p>
+</div>
+
+<div class="book" data-title="Mengenal Tubuh Kita">
+<img src="https://iili.io/C3KwvKg.jpg">
+<p>Mengenal Tubuh Kita</p>
+</div>
+
+<div class="book" data-title="Mengenal Mamalia">
+<img src="https://iili.io/C3KNQIV.jpg">
+<p>Mengenal Mamalia</p>
+</div>
+
+<div class="book" data-title="Mengenal Lingkungan Sekitar Kita">
+<img src="https://iili.io/C3Ke2cu.jpg">
+<p>Mengenal Lingkungan Sekitar Kita</p>
+</div>
+
+<div class="book" data-title="Mititgasi Bencana">
+<img src="https://iili.io/C3Kkcej.jpg">
+<p>Mitigasi Bencana</p>
+</div>
+
+<div class="book" data-title="Olimpiade Fisika">
+<img src="https://iili.io/C3K8jDv.jpg">
+<p>Olimpiade Fisika</p>
+</div>
+
+<div class="book" data-title="Menyelidiki Matahari">
+<img src="https://iili.io/C3KSIXR.jpg">
+<p>Menyelidiki Matahari</p>
+</div>
+
+<div class="book" data-title="Menyelidiki Air Dan Manfaatnya">
+<img src="https://iili.io/C3KUo37.jpg">
+<p>Menyelidiki Air Dan Manfaatnya</p>
+</div>
+
+<div class="book" data-title="Menyelidiki Udara">
+<img src="https://iili.io/C3KUsFS.jpg">
+<p>Menyelidiki Udara</p>
+</div>
+
+<div class="book" data-title="Rahasia Sains">
+<img src="https://iili.io/C3KgEf2.jpg">
+<p>Rahasia Sains</p>
+</div>
+
+<div class="book" data-title="Mengenal Moluska">
+<img src="https://iili.io/C3K4IyX.jpg">
+<p>Mengenal Moluska</p>
+</div>
+
+<div class="book" data-title="Mengenal Teknologi Robot">
+<img src="https://iili.io/C3Kj4n9.jpg">
+<p>Mengenal Teknologi Robot</p>
+</div>
+
+</div>
+
+<!-- IPS -->
+<h3>🌍 IPS</h3>
+
+<div class="books">
+
+<div class="book" data-title="Pahlawan Nasional">
+<img src="https://iili.io/C3faFn4.jpg">
+<p>Pahlawan Nasional</p>
+</div>
+
+<div class="book" data-title="Mitigasi Bencana Alam">
+<img src="https://iili.io/C3fcPLv.jpg">
+<p>Mitigasi Bencana Alam</p>
+</div>
+
+<div class="book" data-title="Merdeka">
+<img src="https://iili.io/C3flW3N.jpg">
+<p>Merdeka</p>
+</div>
+
+<div class="book" data-title="Gempa Bumi">
+<img src="https://iili.io/C3f0Plp.jpg">
+<p>Gempa Bumi</p>
+</div>
+
+<div class="book" data-title="Kekayaan Sumber Daya Indonesia">
+<img src="https://iili.io/C3f1bkP.jpg">
+<p>Kekayaan Sumber Daya Indonesia</p>
+</div>
+
+<div class="book" data-title="Kenakalan Remaja Dan Penanggulangannya">
+<img src="https://iili.io/C3fEeZg.jpg">
+<p>Kenakalan Remaja Dan Penanggulangannya</p>
+</div>
+
+<div class="book" data-title="Indonesia Di Pertemuan 3 Lempeng Bumi">
+<img src="https://iili.io/C3fGmWg.jpg">
+<p>Indonesia Di Pertemuan 3 Lempeng Bumi</p>
+</div>
+
+<div class="book" data-title="Kerajinan Nusantara">
+<img src="https://iili.io/C3fMkrv.jpg">
+<p>Kerajinan Nusantara</p>
+</div>
+
+<div class="book" data-title="Bumi Murka">
+<img src="https://iili.io/C3fWKVn.jpg">
+<p>Bumi Murka</p>
+</div>
+
+<div class="book" data-title="Dinamika Kebudayaan">
+<img src="https://iili.io/C3famWx.jpg">
+<p>Dinamika Kebudayaan</p>
+</div>
+
+</div>
+
+<!-- BAHASA INDONESIA -->
+<h3>📕 Bahasa Indonesia</h3>
+
+<div class="books">
+
+<div class="book" data-title="Ada Duka Di Wibeng">
+<img src="https://iili.io/C3fWP0G.jpg">
+<p>Ada Duka Di Wibeng</p>
+</div>
+
+<div class="book" data-title="Ayo Terus Sekolah">
+<img src="https://iili.io/C3fjBKg.jpg">
+<p>Ayo Terus Sekolah</p>
+</div>
+
+<div class="book" data-title="Pedoman Kata Baku & Tidak Baku">
+<img src="https://iili.io/C3fwlB1.jpg">
+<p>Pedoman Kata Baku & Tidak Baku</p>
+</div>
+
+<div class="book" data-title="Bersahabat Dengan Kamus">
+<img src="https://iili.io/C3fNpln.jpg">
+<p>Bersahabat Dengan Kamus</p>
+</div>
+
+<div class="book" data-title="Belajar Ejaan">
+<img src="https://iili.io/C3fehTx.jpg">
+<p>Belajar Ejaan</p>
+</div>
+
+<div class="book" data-title="Cinta Itu Bukan Virus">
+<img src="https://iili.io/C3fkyUF.jpg">
+<p>Cinta Itu Bukan Virus</p>
+</div>
+
+<div class="book" data-title="Pantang Menyerah">
+<img src="https://iili.io/C3f8lBp.jpg">
+<p>Pantang Menyerah</p>
+</div>
+
+<div class="book" data-title="Indonesia Jaya">
+<img src="https://iili.io/C3fSmf2.jpg">
+<p>Indonesia Jaya</p>
+</div>
+
+<div class="book" data-title="Penulis Cilik">
+<img src="https://iili.io/C3fgz42.jpg">
+<p>Penulis Cilik</p>
+</div>
+
+<div class="book" data-title="Ayo Mengenal Pragraf">
+<img src="https://iili.io/C3fXsCF.jpg">
+<p>Ayo Mengenal Pragraf</p>
+</div>
+
+</div>
+
+<!-- KEPULAUAN -->
+<h3>🏝️ Kepulauan</h3>
+
+<div class="books">
+
+<div class="book" data-title="Papua Barat">
+<img src="https://iili.io/C3f4KWG.jpg">
+<p>Papua Barat</p>
+</div>
+
+<div class="book" data-title="Kepulauan Riau">
+<img src="https://iili.io/C3f6FkP.jpg">
+<p>Kepulauan Riau</p>
+</div>
+
+<div class="book" data-title="Nusa Tenggara Timur">
+<img src="https://iili.io/C3fP3Pf.png">
+<p>Nusa Tenggara Timur</p>
+</div>
+
+<div class="book" data-title="Sulawesi Selatan">
+<img src="https://iili.io/C3fifsa.jpg">
+<p>Sulawesi Selatan</p>
+</div>
+
+<div class="book" data-title="Papua">
+<img src="https://iili.io/C3fLgfa.png">
+<p>Papua</p>
+</div>
+
+<div class="book" data-title="Sulawesi Barat">
+<img src="https://iili.io/C3fZHEg.jpg">
+<p>Sulawesi Barat</p>
+</div>
+
+<div class="book" data-title="Sulawesi Tengah">
+<img src="https://iili.io/C3ft0DN.jpg">
+<p>Sulawesi Tengah</p>
+</div>
+
+<div class="book" data-title="Sulawesi Tenggara">
+<img src="https://iili.io/C3fD17j.jpg">
+<p>Sulawesi Tenggara</p>
+</div>
+
+<div class="book" data-title="Sulawesi Utara">
+<img src="https://iili.io/C3fbYjp.jpg">
+<p>Sulawesi Utara</p>
+</div>
+
+<div class="book" data-title="Sumatra Barat">
+<img src="https://iili.io/C3fmwJa.jpg">
+<p>Sumatra Barat</p>
+</div>
+
+<div class="book" data-title="Sumatra Selatan">
+<img src="https://iili.io/C3fy9CN.jpg">
+<p>Sumatra Selatan</p>
+</div>
+
+<div class="book" data-title="Sumatra Utara">
+<img src="https://iili.io/C3q9doQ.jpg">
+<p>Sumatra Utara</p>
+</div>
+
+<div class="book" data-title="Nusa Tenggara Barat">
+<img src="https://iili.io/C3f4XLJ.png">
+<p>Nusa Tenggara Barat</p>
+</div>
+
+</div>
+
+<!-- MATEMATIKA -->
+<h3>➗ Matematika</h3>
+
+<div class="books">
+
+<div class="book" data-title="Segitiga">
+<img src="https://iili.io/C3qH8ps.jpg">
+<p>Segitiga</p>
+</div>
+
+<div class="book" data-title="Berat, Waktu Dan Pengukuran">
+<img src="https://iili.io/C3qd7UP.jpg">
+<p>Berat, Waktu Dan Pengukuran</p>
+</div>
+
+<div class="book" data-title="Siku-Siku">
+<img src="https://iili.io/C3q3f99.jpg">
+<p>Siku-Siku</p>
+</div>
+
+<div class="book" data-title="Garis Dan Kedudukannya">
+<img src="https://iili.io/C3qFtXs.jpg">
+<p>Garis Dan Kedudukannya</p>
+</div>
+
+<div class="book" data-title="Mengukur Bangun Datar">
+<img src="https://iili.io/C3qKtyP.jpg">
+<p>Mengukur Bangun Datar</p>
+</div>
+
+<div class="book" data-title="Trik-Trik Berhitung">
+<img src="https://iili.io/C3qfPDX.jpg">
+<p>Trik-Trik Berhitung</p>
+</div>
+
+<div class="book" data-title="Bilangan">
+<img src="https://iili.io/C3qoCEg.jpg">
+<p>Bilangan</p>
+</div>
+
+<div class="book" data-title="Alat Analisis Data">
+<img src="https://iili.io/C3qxVUJ.jpg">
+<p>Alat Analisis Data</p>
+</div>
+
+<div class="book" data-title="Struktur Aljabar">
+<img src="https://iili.io/C3qz0ml.jpg">
+<p>Struktur Aljabar</p>
+</div>
+
+<div class="book" data-title="Matematika Smp">
+<img src="https://iili.io/C3qTzPt.jpg">
+<p>Matematika Smp</p>
+</div>
+
+
+</div>
+
+<!-- PAI -->
+<h3>🕌 Pendidikan Agama Islam</h3>
+
+<div class="books">
+
+<div class="book" data-title="Bahasa Arab Untuk Dasar">
+<img src="https://iili.io/C3qumCB.jpg">
+<p>Bahasa Arab Untuk Dasar</p>
+</div>
+
+<div class="book" data-title="Kumpulan doa dalam Al-Qur'an">
+<img src="https://iili.io/C3q5mCl.jpg">
+<p>Kumpulan doa dalam Al-Qur'an</p>
+</div>
+
+<div class="book" data-title="Surat Terpilih Dan Makna Ringkas">
+<img src="https://iili.io/C3qYbgS.jpg">
+<p>Surat Terpilih Dan Makna Ringkas</p>
+</div>
+
+<div class="book" data-title="Hari-Hari Suci Umat Islam">
+<img src="https://iili.io/C3qcUAX.jpg">
+<p>Hari-Hari Suci Umat Islam</p>
+</div>
+
+<div class="book" data-title="Mukjijat Nabi Dalam Al-Qur'an">
+<img src="https://iili.io/C3q0dIn.jpg">
+<p>Mukjijat Nabi Dalam Al-Qur'an</p>
+</div>
+
+<div class="book" data-title="Mengenal Huruf Hijaiyah">
+<img src="https://iili.io/C3q1ES2.jpg">
+<p>Mengenal Huruf Hijaiyah</p>
+</div>
+
+<div class="book" data-title="Muhammad SAW idolaku">
+<img src="https://iili.io/C3qGRBs.jpg">
+<p>Muhammad SAW idolaku</p>
+</div>
+
+<div class="book" data-title="Meneladani 99 sifat allah">
+<img src="https://iili.io/C3qMSHl.jpg">
+<p>Meneladani 99 sifat allah</p>
+</div>
+
+<div class="book" data-title="Kumpulan Hadits">
+<img src="https://iili.io/C3qWuQ1.jpg">
+<p>Kumpulan Hadits</p>
+</div>
+
+<div class="book" data-title="20 Cerita Anak Muslim">
+<img src="https://iili.io/C3qXXDB.jpg">
+<p>20 Cerita Anak Muslim</p>
+</div>
+
+<div class="book" data-title="100 Hadits Qudsi">
+<img src="https://iili.io/C3qjgnI.jpg">
+<p>100 Hadits Qudsi</p>
+</div>
+
+<div class="book" data-title="Aku Cinta Damai">
+<img src="https://iili.io/C3qRYOJ.jpg">
+<p>Aku Cinta Damai</p>
+</div>
+
+</div>
+
+<!-- PENJAS -->
+<h3>⚽ Penjas</h3>
+
+<div class="books">
+
+<div class="book" data-title="Pola-Pola Dalam Senam">
+<img src="https://iili.io/C3qN8BI.jpg">
+<p>Pola-Pola Dalam Senam</p>
+</div>
+
+<div class="book" data-title="Obat Yang Ada Di Sekitar Kita">
+<img src="https://iili.io/C3q8k0B.jpg">
+<p>Obat Yang Ada Di Sekitar Kita</p>
+</div>
+
+<div class="book" data-title="Tenis Meja">
+<img src="https://iili.io/C3qgHKl.jpg">
+<p>Tenis Meja</p>
+</div>
+
+<div class="book" data-title="Stop Mirasantika">
+<img src="https://iili.io/C3q6RO7.jpg">
+<p>Stop Mirasantika</p>
+</div>
+
+<div class="book" data-title="Kacang Hijau">
+<img src="https://iili.io/C3qZQ1e.jpg">
+<p>Kacang Hijau</p>
+</div>
+
+<div class="book" data-title="Tanaman Yang Mengandung Zat Pengganggu">
+<img src="https://iili.io/C3qb5b4.jpg">
+<p>Tanaman Yang Mengandung Zat Pengganggu</p>
+</div>
+
+<div class="book" data-title="Teori Bermain Catur">
+<img src="https://iili.io/C3BJcLx.jpg">
+<p>Teori Bermain Catur</p>
+</div>
+
+<div class="book" data-title="Olahraga Alam">
+<img src="https://iili.io/C3B33dB.jpg">
+<p>Olahraga Alam</p>
+</div>
+
+<div class="book" data-title="Panduan Sepak Bola">
+<img src="https://iili.io/C3BFTCb.jpg">
+<p>Panduan Sepak Bola</p>
+</div>
+
+<div class="book" data-title="Pola Hidup Sehat">
+<img src="https://iili.io/C3qeQ07.jpg">
+<p>Pola Hidup Sehat</p>
+</div>
+
+</div>
+
+<!-- PKN -->
+<h3>🏛️ PKN</h3>
+
+<div class="books">
+
+<div class="book" data-title="Berbakti Pada Orang Tua">
+<img src="https://iili.io/C3BBIRV.jpg">
+<p>Berbakti Pada Orang Tua</p>
+</div>
+
+<div class="book" data-title="Akhlak Siswa Terhadap Guru">
+<img src="https://iili.io/C3BxIrg.jpg">
+<p>Akhlak Siswa Terhadap Guru</p>
+</div>
+
+<div class="book" data-title="Akhlak Siswa Terhadap Teman">
+<img src="https://iili.io/C3BIc0X.jpg">
+<p>Akhlak Siswa Terhadap Teman</p>
+</div>
+
+<div class="book" data-title="Bakti Seorang Anak">
+<img src="https://iili.io/C3BuoAJ.jpg">
+<p>Bakti Seorang Anak</p>
+</div>
+
+<div class="book" data-title="Budi Pekerti Bertamu">
+<img src="https://iili.io/C3BRYTG.jpg">
+<p>Budi Pekerti Bertamu</p>
+</div>
+
+<div class="book" data-title="Pendidikan Budi Pekerti">
+<img src="https://iili.io/C3B7Wzb.jpg">
+<p>Pendidikan Budi Pekerti</p>
+</div>
+
+<div class="book" data-title="Budi Pekerti Luhur">
+<img src="https://iili.io/C3BalR9.jpg">
+<p>Budi Pekerti Luhur</p>
+</div>
+
+<div class="book" data-title="Hidup Berbhineka Tunggal Ika">
+<img src="https://iili.io/C3Blv6v.jpg">
+<p>Hidup Berbhineka Tunggal Ika</p>
+</div>
+
+<div class="book" data-title="Ideologi Negara">
+<img src="https://iili.io/C3B0tzF.jpg">
+<p>Ideologi Negara</p>
+</div>
+
+<div class="book" data-title="Ideologi Pancasila">
+<img src="https://iili.io/C3BE0nn.jpg">
+<p>Ideologi Pancasila</p>
+</div>
+
+<div class="book" data-title="Sikap Dan Moral Menentukan Kesuksesan">
+<img src="https://iili.io/C3BGSWX.jpg">
+<p>Sikap Dan Moral Menentukan Kesuksesan</p>
+</div>
+
+<div class="book" data-title="Tata Tertib Di Sekolah Dan Di Rumah">
+<img src="https://iili.io/C3BV0n1.jpg">
+<p>Tata Tertib Di Sekolah Dan Di Rumah</p>
+</div>
+
+<div class="book" data-title="Hubungan Internasional">
+<img src="https://iili.io/C3BXk2s.jpg">
+<p>Hubungan Internasional</p>
+</div>
+
+<div class="book" data-title="Akhlak Siswa Terhadap Alam">
+<img src="https://iili.io/C3BCQGn.jpg">
+<p>Akhlak Siswa Terhadap Alam</p>
+</div>
+
+</div>
+
+<!-- SENI BUDAYA -->
+<h3>🎨 Seni Budaya</h3>
+
+<div class="books">
+
+<div class="book" data-title="Mengenal Teater">
+<img src="https://iili.io/C3BwTkG.jpg">
+<p>Mengenal Teater</p>
+</div>
+
+<div class="book" data-title="Mengenal Pelukis Dunia Dan Indonesia">
+<img src="https://iili.io/C3Berjj.jpg">
+<p>Mengenal Teater</p>
+</div>
+
+<div class="book" data-title="Batik Dan Tenun">
+<img src="https://iili.io/C3Bv70N.jpg">
+<p>Batik Dan Tenun</p>
+</div>
+
+<div class="book" data-title="Mengenal Musik Seni Dan Lagu">
+<img src="https://iili.io/CcNIEjs.jpg">
+<p>Mengenal Musik Seni Dan Lagu</p>
+</div>
+
+<div class="book" data-title="Mengenal Warna">
+<img src="https://iili.io/C3Bgo4R.jpg">
+<p>Mengenal Warna</p>
+</div>
+
+<div class="book" data-title="Membatik">
+<img src="https://iili.io/C3BrgUl.jpg">
+<p>Membatik</p>
+</div>
+
+<div class="book" data-title="Keragaman Tari Nusantara">
+<img src="https://iili.io/C3B4jrx.jpg">
+<p>Keragaman Tari Nusantara</p>
+</div>
+
+<div class="book" data-title="Aneka Tari Anak-Anak">
+<img src="https://iili.io/C3B6Zcx.jpg">
+<p>Aneka Tari Anak-Anak</p>
+</div>
+
+<div class="book" data-title="Batikku">
+<img src="https://iili.io/C3BsfjI.jpg">
+<p>Batikku</p>
+</div>
+
+<div class="book" data-title="Membuat Karakter">
+<img src="https://iili.io/C3BLNb2.jpg">
+<p>Membuat Karakter</p>
+</div>
+
+<div class="book" data-title="Mengenal Seni Tari">
+<img src="https://iili.io/C3BZuyv.jpg">
+<p>Mengenal Seni Tari</p>
+</div>
+
+<div class="book" data-title="Mengenal Alat Musik">
+<img src="https://iili.io/C3BNDKP.jpg">
+<p>Mengenal Pelukis Dunia Dan Indonesia</p>
+</div>
+
+</div>
+
+<!-- TIK -->
+<h3>💻 TIK</h3>
+
+<div class="books">
+
+<div class="book" data-title="Jelajahi Informasi Menggunakan Internet">
+<img src="https://iili.io/C3BDzmv.jpg">
+<p>Jelajahi Informasi Menggunakan Internet</p>
+</div>
+
+<div class="book" data-title="Solusi Cepat Bisa Microsoft Office">
+<img src="https://iili.io/C3BmRUX.jpg">
+<p>Solusi Cepat Bisa Microsoft Office</p>
+</div>
+
+<div class="book" data-title="Elektronik Di Rumah Kita">
+<img src="https://iili.io/C3ByV9e.jpg">
+<p>Elektronik Di Rumah Kita</p>
+</div>
+
+<div class="book" data-title="Dasar-Dasar Microsoft Excel">
+<img src="https://iili.io/C3C9Pee.jpg">
+<p>Dasar-Dasar Microsoft Excel</p>
+</div>
+
+<div class="book" data-title="Alat Komunikasi">
+<img src="https://iili.io/C3Bb5wx.jpg">
+<p>Alat Komunikasi</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- DETAIL BUKU -->
+<div id="detailPage" class="card hidden">
+
+<h2>Detail Buku</h2>
+
+<div style="text-align:center;">
+<img id="detailImg" width="180">
+</div>
+
+<h3 id="detailJudul"></h3>
+
+<p><b>Penerbit :</b>
+<span id="detailPenerbit"></span>
+</p>
+
+<p><b>Ringkasan :</b></p>
+
+<p id="detailRingkasan"></p>
+
+<button class="btn" onclick="pinjamBuku()">
+📖 Pinjam Buku
+</button>
+
+<button class="btn" onclick="show('bukuPage')">
+⬅ Kembali
+</button>
+
+</div>
+
+
+
+<!-- RIWAYAT -->
+<div id="riwayatPage" class="card hidden">
+
+<h2>Riwayat</h2>
+
+<div id="riwayatList"></div>
+
+</div>
+
+<!-- CHATBOT -->
+<div id="chatPage" class="card hidden">
+
+<h2>Chatbot</h2>
+
+<div id="chatBox"></div>
+
+<input id="chatInput" placeholder="Tanya sesuatu...">
+
+<button class="btn" onclick="kirimPesan()">Kirim</button>
+
+<button class="btn" onclick="kirimWA()">Kirim ke WA</button>
+
+</div>
+
+</div>
+
+<!-- NAV -->
+<div class="footer-nav">
+
+<button class="btn" onclick="show('formPage')">Form</button>
+
+<button class="btn" onclick="show('bukuPage')">Buku</button>
+
+<button class="btn" onclick="show('riwayatPage')">Riwayat</button>
+
+<button class="btn" onclick="show('chatPage')">Chatbot</button>
+
+<button class="btn" onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+let dataSementara = {};
+let lastMessage = "";
+
+/* LOGIN */
+
+const akun = [
+{
+username:"admin",
+password:"admin123"
+},
+{
+username:"siswa",
+password:"12345"
+}
+];
+
+function login(){
+
+let username = document.getElementById("loginUser").value;
+let password = document.getElementById("loginPass").value;
+
+let cocok = akun.find(
+a => a.username === username &&
+a.password === password
+);
+
+if(cocok){
+
+localStorage.setItem("isLogin","true");
+localStorage.setItem("username",username);
+
+document.getElementById("loginPage").classList.add("hidden");
+document.getElementById("mainApp").classList.remove("hidden");
+
+alert("Login berhasil!");
+
+}else{
+
+alert("Username atau Password salah!");
+
+}
+
+}
+
+function logout(){
+
+localStorage.removeItem("isLogin");
+localStorage.removeItem("username");
+
+location.reload();
+
+}
+
+/* CEK LOGIN SAAT WEB DIBUKA */
+
+function login(){
+  let username = document.getElementById("loginUser").value.trim();
+  let password = document.getElementById("loginPass").value.trim();
+
+  if(!username || !password){
+    alert("Isi username dan password!");
+    return;
+  }
+
+  let cocok = akun.find(a => a.username === username && a.password === password);
+
+  if(cocok){
+    localStorage.setItem("isLogin","true");
+    localStorage.setItem("username",username);
+
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("mainApp").classList.remove("hidden");
+
+  } else {
+    alert("Username atau Password salah!");
+  }
+}
+
+let books = document.querySelectorAll(".book");
+
+let bukuDipilih="";
+
+const detailBuku={
+
+"Sekolah Untuk Timur":{
+penerbit:"Muhammad Fauzi, 2010",
+ringkasan:"Novel Sekolah untuk Timur mengisahkan perjuangan seorang guru yang mengabdikan diri di wilayah Indonesia bagian timur dengan segala keterbatasan yang ada. Melalui semangat dan dedikasinya, tokoh utama berusaha memberikan pendidikan yang layak kepada anak-anak di daerah terpencil meskipun harus menghadapi berbagai tantangan, seperti minimnya fasilitas, sulitnya akses transportasi, serta kondisi sosial dan ekonomi masyarakat.",
+gambar:"https://i.ibb.co.com/CpVKsPLk/sekolah-untuk-timur.jpg",
+Stok :"130"
+},
+
+"Sahabat Jadi Cinta":{
+penerbit:"Intan SR, 2011",
+ringkasan:"Novel Sahabat Jadi Cinta mengisahkan persahabatan erat antara dua remaja yang telah saling mengenal sejak lama. Seiring berjalannya waktu, kebersamaan yang mereka jalani membuat muncul perasaan yang lebih dari sekadar sahabat. Namun, keduanya dihadapkan pada keraguan untuk mengungkapkan perasaan karena takut merusak hubungan persahabatan yang telah terjalin.",
+gambar:"https://i.ibb.co.com/svqNcm9K/sahabat-jadi-cinta.jpg",
+Stok :"130"
+},
+
+"Saat Bersamamu":{
+penerbit:"Dewi, 2002",
+ringkasan:"Novel Saat Bersamamu menceritakan tentang perjalanan hidup seorang tokoh yang menemukan arti kebersamaan, persahabatan, dan cinta melalui pertemuannya dengan seseorang yang sangat berarti dalam hidupnya. Kehadiran orang tersebut membawa perubahan besar, memberikan semangat, serta mengajarkan pentingnya saling mendukung dalam menghadapi berbagai masalah kehidupan.",
+gambar:"https://i.ibb.co.com/Jjm9BZXd/saat-bersamamu.jpg",
+Stok :"130"
+
+},
+
+"Rinjani":{
+penerbit:"Nabila N, 2008",
+ringkasan:"Novel Rinjani mengisahkan perjalanan sekelompok tokoh yang mendaki Gunung Rinjani di Pulau Lombok. Perjalanan tersebut tidak hanya menjadi petualangan untuk mencapai puncak, tetapi juga menjadi proses menemukan jati diri, menghadapi rasa takut, menguji persahabatan, serta belajar tentang arti kerja sama dan ketekunan. Berbagai rintangan seperti cuaca yang tidak menentu, medan yang berat, dan tantangan fisik membuat para tokoh semakin menghargai perjuangan dan keindahan alam.",
+gambar:"https://i.ibb.co.com/WNf9vGw9/rinjani.jpg",
+Stok :"130"
+},
+
+"Legenda Rawa Pening":{
+penerbit:"Tri Wahyuni, 2004",
+ringkasan:"Novel Legenda Rawa Pening menceritakan kisah rakyat dari Jawa Tengah tentang asal-usul terbentuknya Danau Rawa Pening. Cerita berpusat pada seorang anak laki-laki bernama Baru Klinting, yang memiliki kesaktian luar biasa tetapi sering dipandang rendah dan diperlakukan tidak baik oleh masyarakat. Ketika meminta makanan kepada penduduk desa, ia justru diusir dan dihina.",
+gambar:"https://i.ibb.co.com/wrZQLLRD/rawa-pening.jpg",
+Stok :"130"
+},
+
+"Now I Know":{
+penerbit:"Kamilia N, 2010",
+ringkasan:"Now I Know merupakan buku yang mengisahkan perjalanan tokoh utama dalam memahami berbagai pengalaman hidup, menghadapi tantangan, dan menemukan makna di balik setiap peristiwa yang dialaminya. Melalui alur cerita yang menarik, pembaca diajak untuk belajar tentang pentingnya keberanian, kejujuran, persahabatan, serta proses mengenal diri sendiri. Buku ini menyampaikan pesan bahwa setiap pengalaman, baik menyenangkan maupun sulit, dapat menjadi pelajaran berharga yang membantu seseorang tumbuh menjadi pribadi yang lebih baik.",
+gambar:"https://i.ibb.co.com/VWSFxYtC/now-i-know.jpg",
+Stok :"130"
+},
+
+"Kala Senja Menyapa":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Kala Senja Menyapa merupakan novel yang mengangkat kisah tentang perjalanan hidup, persahabatan, keluarga, dan cinta yang dibalut dengan berbagai konflik serta pelajaran berharga. Cerita menggambarkan bagaimana setiap tokoh menghadapi berbagai tantangan, belajar menerima kenyataan, dan bangkit dari masa-masa sulit untuk menemukan harapan baru.",
+gambar:"https://i.ibb.co.com/JWgcPWTZ/kala-senja-menyapa.jpg",
+Stok :"130"
+},
+
+"dari Jendela SMP":{
+penerbit:"Rosa Maria, 2012",
+ringkasan:"Novel Dari Jendela SMP mengisahkan kehidupan para remaja yang sedang menempuh pendidikan di bangku sekolah menengah pertama. Cerita berfokus pada persahabatan, keluarga, pendidikan, dan perjalanan para tokohnya dalam menghadapi berbagai tantangan masa remaja. Mereka belajar memahami arti persahabatan, kejujuran, tanggung jawab, serta pentingnya saling menghargai dalam setiap perbedaan yang ada.",
+gambar:"https://i.ibb.co.com/qFV23rfY/dari-jendela-smp.jpg",
+Stok :"130"
+},
+
+"Anak Negri":{
+penerbit:"Suroso, 2002",
+ringkasan:"Anak Negeri menceritakan tentang perjuangan seorang anak Indonesia dalam menghadapi berbagai tantangan kehidupan untuk meraih cita-citanya. Dengan semangat pantang menyerah, tokoh utama berusaha mengatasi keterbatasan ekonomi, pendidikan, dan berbagai rintangan yang dihadapi. Melalui kerja keras, tekad, dan dukungan dari orang-orang di sekitarnya, ia belajar bahwa keberhasilan dapat diraih dengan usaha yang sungguh-sungguh.",
+gambar:"https://i.ibb.co.com/chFbPnk5/anak-negri.jpg",
+Stok :"130"
+},
+
+"Bahasa Inggris 8":{
+penerbit:"Nafiya Nessy, 2015",
+ringkasan:"Buku Bahasa Inggris Kelas 8 disusun untuk membantu siswa meningkatkan kemampuan berbahasa Inggris melalui empat keterampilan utama, yaitu listening (mendengarkan), speaking (berbicara), reading (membaca), dan writing (menulis). Materi disajikan secara bertahap dengan berbagai contoh percakapan, teks bacaan, latihan soal, serta aktivitas yang mendorong siswa untuk berkomunikasi menggunakan bahasa Inggris dalam kehidupan sehari-hari.",
+gambar:"https://i.ibb.co.com/Q7NPzp07/7b.jpg",
+File : "Buku/Bahasa-inggris-BS-KLS-XI-efc.pdf",
+Stok :"130"
+},
+
+"Mahir Bahasa Inggris":{
+penerbit:"Tuti Sutarsanah, 2010",
+ringkasan:"Buku Mahir Bahasa Inggris merupakan buku panduan yang dirancang untuk membantu pembaca meningkatkan kemampuan berbahasa Inggris secara lebih efektif. Buku ini membahas berbagai materi dasar hingga lanjutan, seperti kosakata (vocabulary), tata bahasa (grammar), percakapan sehari-hari (conversation), membaca (reading), dan menulis (writing).",
+gambar:"https://i.ibb.co.com/gFZX0b4X/mahir-bahasa-inggris.jpg",
+Stok :"130"
+},
+
+"Belajar Bahasa Inggris Dengan Praktis":{
+penerbit:"Krismiyati, 2008",
+ringkasan:"Buku Belajar Bahasa Inggris Dengan Praktis merupakan buku yang dirancang untuk membantu pembaca mempelajari bahasa Inggris dengan cara yang mudah dan sederhana. Buku ini membahas dasar-dasar bahasa Inggris seperti kosakata (vocabulary), tata bahasa (grammar), percakapan sehari-hari, serta cara menggunakan kalimat yang tepat dalam berbagai situasi.",
+gambar:"https://i.ibb.co.com/wFSFZB8Q/images-jpbahasa-inggris-lengkap.jpg",
+Stok :"130"
+},
+
+"Buku Klasik":{
+penerbit:"Meirly, 2011",
+ringkasan:"Buku Klasik Bahasa Inggris merupakan kumpulan karya sastra berbahasa Inggris yang berisi cerita-cerita terkenal dan memiliki nilai budaya, sejarah, serta pesan moral yang mendalam. Buku ini membantu pembaca memahami penggunaan bahasa Inggris melalui gaya penulisan klasik, kosakata yang beragam, serta berbagai ungkapan yang sering digunakan dalam karya sastra.",
+gambar:"https://i.ibb.co.com/KpfS9J2y/buku-klasik.jpg",
+Stok :"130"
+},
+
+"Soal Bahasa Inggris":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Buku Soal Bahasa Inggris berisi kumpulan latihan dan evaluasi untuk membantu siswa mengembangkan kemampuan berbahasa Inggris. Materi soal mencakup berbagai aspek pembelajaran seperti kosakata (vocabulary), tata bahasa (grammar), membaca (reading comprehension), menulis (writing), serta pemahaman percakapan (dialogue).",
+gambar:"https://i.ibb.co.com/jvtQqHKc/mega-bang-soal-bahasa-inggris.jpg",
+Stok :"130"
+},
+
+"Bahasa Inggris":{
+penerbit:"Teguh Puja Pramadya, 2009",
+ringkasan:"Buku Bahasa Inggris tentang Hewan membahas berbagai jenis hewan dalam bahasa Inggris, mulai dari hewan peliharaan, hewan liar, hingga hewan yang hidup di lingkungan tertentu. Buku ini membantu siswa mengenal nama-nama hewan, ciri-ciri fisik, habitat, makanan, serta kebiasaan hewan menggunakan kosakata bahasa Inggris.",
+gambar:"https://i.ibb.co.com/qLjDQWMn/hewan.jpg",
+File : "Buku/Bahasa-inggris-BS-KLS-XI-efc.pdf",
+Stok :"130"
+
+},
+
+"Bahasa Inggris 9":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Buku Bahasa Inggris Kelas 9 dirancang untuk mengembangkan kemampuan siswa dalam menggunakan bahasa Inggris secara lebih mandiri dan komunikatif. Materi mencakup empat keterampilan berbahasa, yaitu listening (mendengarkan), speaking (berbicara), reading (membaca), dan writing (menulis), yang disajikan melalui berbagai ak",
+gambar:"https://i.ibb.co.com/m5H607pj/bahasa-inggris-kelas-9.jpg",
+File : "Buku/Bahasa-inggris-BS-KLS-XI-efc.pdf",
+Stok :"130"
+},
+
+"Cerdas Bahasa Inggris kelas 8":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Buku Cerdas Bahasa Inggris Kelas 8 merupakan buku pendamping pembelajaran yang dirancang untuk membantu siswa SMP memahami materi bahasa Inggris secara mudah, sistematis, dan menyenangkan. Materi dalam buku ini mencakup penguasaan kosakata (vocabulary), tata bahasa (grammar), membaca (reading), menulis (writing), berbicara (speaking), dan mendengarkan (listening). Setiap bab dilengkapi dengan contoh, latihan, dan evaluasi untuk mengukur pemahaman siswa terhadap materi yang telah dipelajari.",
+gambar:"https://i.ibb.co.com/4wc2Cwp4/cerdas-8.jpg",
+Stok :"130" 
+},
+
+"Briliant step 8":{
+penerbit:"Aziza Restu Febriyanto, 2007",
+ringkasan:"Briliant Step 8 merupakan buku pendamping pembelajaran Bahasa Inggris untuk siswa kelas VIII yang dirancang untuk membantu memahami materi secara lebih mudah dan sistematis. Buku ini memuat berbagai materi sesuai kurikulum, seperti kosakata (vocabulary), tata bahasa (grammar), membaca (reading), menulis (writing), berbicara (speaking), dan mendengarkan (listening). Setiap materi disajikan dengan contoh yang mudah dipahami serta latihan untuk mengasah kemampuan berbahasa Inggris siswa.",
+gambar:"https://i.ibb.co.com/gZFPFF3R/briliant-step-8.jpg",
+Stok :"130"
+},
+
+"English For Nusantara":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Buku English for Nusantara merupakan buku pelajaran Bahasa Inggris untuk siswa kelas VIII yang dirancang sesuai dengan Kurikulum Merdeka. Buku ini bertujuan membantu siswa mengembangkan kemampuan berbahasa Inggris melalui empat keterampilan utama, yaitu menyimak (listening), berbicara (speaking), membaca (reading), dan menulis (writing). Materi disajikan dengan tema-tema yang dekat dengan kehidupan sehari-hari sehingga mudah dipahami dan diterapkan oleh siswa.",
+gambar:"https://i.ibb.co.com/0V6xmLQ9/for-nusantara.jpg",
+Stok :"130" 
+},
+
+"When english rings a bell":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Buku When English Rings a Bell merupakan buku pelajaran Bahasa Inggris untuk siswa kelas VIII yang bertujuan mengembangkan kemampuan berkomunikasi dalam bahasa Inggris secara aktif dan percaya diri. Materi disusun secara bertahap melalui berbagai kegiatan mendengarkan, berbicara, membaca, dan menulis yang berkaitan dengan situasi sehari-hari sehingga mudah dipahami dan diterapkan oleh siswa.",
+gambar:"https://i.ibb.co.com/Gfh55MRt/kelas.jpg",
+Stok :"130" 
+},
+
+"Mandiri Plus":{
+penerbit:"Nur Zaida, 2013",
+ringkasan:"Buku Mandiri Plus Bahasa Inggris merupakan buku pendamping yang dirancang untuk membantu siswa memahami materi pelajaran Bahasa Inggris secara lebih mendalam. Buku ini berisi rangkuman materi, penjelasan tata bahasa (grammar), kosakata (vocabulary), contoh percakapan, latihan soal, serta pembahasan yang disusun sesuai dengan kurikulum yang berlaku.",
+gambar:"https://i.ibb.co.com/HpYzzX7s/mandiri-plus-inggris.png",
+Stok :"130" 
+},
+
+"Bahasa Inggris":{
+penerbit:"Debi Karmita, 2011",
+ringkasan:"Buku Bahasa Inggris untuk SMP merupakan buku pembelajaran yang dirancang untuk membantu siswa memahami dan mengembangkan kemampuan berbahasa Inggris sejak tingkat sekolah menengah pertama. Materi dalam buku ini mencakup dasar-dasar bahasa Inggris seperti kosakata (vocabulary), tata bahasa (grammar), percakapan sehari-hari, membaca teks, serta latihan menulis dalam bahasa Inggris.",
+gambar:"https://i.ibb.co.com/d4x43MsC/smp.jpg",
+File : "Buku/Bahasa-inggris-BS-KLS-XI-efc.pdf",
+Stok :"130"
+},
+
+"English Is Fun":{
+penerbit:"Saufa, januari 2017",
+ringkasan:"Buku English Is Fun adalah buku pembelajaran Bahasa Inggris untuk pemula yang dibuat agar siswa lebih mudah memahami dasar-dasar bahasa Inggris. Buku ini berisi materi kosakata, percakapan sederhana, tata bahasa dasar, serta latihan soal yang disajikan dengan cara yang menarik dan tidak membosankan. Tujuannya adalah membantu siswa meningkatkan kemampuan membaca, menulis, dan berbicara Bahasa Inggris dengan lebih menyenangkan.",
+gambar:"https://iili.io/C3Kohj1.jpg",
+Stok :"130"
+},
+
+"Always English":{
+penerbit:"Yudhistira, 2017",
+ringkasan:"Buku Always English merupakan buku pembelajaran Bahasa Inggris yang dirancang untuk membantu siswa memahami dasar-dasar bahasa Inggris melalui materi percakapan, kosakata, dan latihan soal. Buku ini disusun dengan cara sederhana agar mudah dipahami dan cocok untuk meningkatkan kemampuan komunikasi siswa dalam bahasa Inggris sehari-hari.",
+gambar:"https://iili.io/C3KxB9V.jpg",
+Stok :"130"
+},
+
+"Takdir Yang Terkoyak":{
+penerbit:"Gramedia, 2010",
+ringkasan:"Takdir Yang Terkoyak adalah sebuah novel yang menceritakan perjuangan hidup tokoh utama dalam menghadapi berbagai ujian dan konflik kehidupan. Cerita ini menggambarkan kesedihan, keteguhan, serta usaha seseorang untuk bertahan di tengah keadaan yang sulit. Novel ini memberikan pesan moral tentang kesabaran, keteguhan hati, dan pentingnya tidak menyerah pada takdir.",
+gambar:"https://iili.io/C3K7Vyb.jpg",
+Stok :"130"
+},
+
+"I Love English":{
+penerbit:"The Hermit Crab ELT Institute, 2014",
+ringkasan:"I Love English adalah buku pembelajaran Bahasa Inggris untuk siswa pemula (terutama anak sekolah dasar hingga SMP awal). Buku ini berisi materi dasar seperti kosakata, percakapan sederhana, listening, reading, dan writing. Disusun dengan cara yang menarik dan bertahap agar siswa mudah memahami bahasa Inggris serta terbiasa menggunakannya dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3KT5Sj.jpg",
+Stok :"130"
+},
+
+"Speak English":{
+penerbit:"Orient BlackSwan, 2012",
+ringkasan:"Speak English adalah buku pembelajaran Bahasa Inggris yang berfokus pada kemampuan speaking dan listening. Buku ini berisi latihan percakapan, kosakata, dan dialog kehidupan sehari-hari agar siswa lebih percaya diri dalam berbicara bahasa Inggris. Materinya disusun bertahap dari mudah ke sulit, sehingga cocok untuk pemula hingga tingkat menengah.",
+gambar:"https://iili.io/C3KuvmQ.jpg",
+Stok :"130"
+},
+
+"English Is Cool":{
+penerbit:"Shirley Hudson, 2011",
+ringkasan:"English Is Cool adalah buku pembelajaran Bahasa Inggris yang dirancang untuk membantu siswa memahami dasar-dasar bahasa Inggris dengan cara yang sederhana dan menyenangkan. Buku ini berisi kosakata, dialog sehari-hari, latihan percakapan, serta soal latihan agar siswa lebih mudah menguasai kemampuan membaca, menulis, dan berbicara dalam bahasa Inggris.",
+gambar:"https://iili.io/C3KAtcu.jpg",
+Stok :"130"
+},
+
+"Bahasa Inggris":{
+penerbit:"Yudhistira, 2017",
+ringkasan:"Buku Bahasa Inggris adalah buku pembelajaran yang berisi materi dasar hingga menengah seperti kosakata (vocabulary), tata bahasa (grammar), percakapan (conversation), reading, dan writing. Buku ini digunakan untuk membantu siswa memahami dan menggunakan Bahasa Inggris dalam kehidupan sehari-hari, baik secara lisan maupun tulisan dengan latihan-latihan yang bertahap.",
+gambar:"https://iili.io/C3KCglR.jpg",
+File : "Buku/Bahasa-inggris-BS-KLS-XI-efc.pdf",
+Stok :"130"
+},
+
+"Delisa":{
+penerbit:"Tere Liye, 2005",
+ringkasan:"Hafalan Shalat Delisa adalah novel yang menceritakan seorang anak perempuan bernama Delisa yang sedang belajar menghafal bacaan shalat. Kehidupannya berubah drastis ketika bencana tsunami Aceh terjadi dan menghancurkan keluarganya. Meskipun mengalami banyak kehilangan dan cobaan berat, Delisa tetap berusaha kuat, tabah, dan melanjutkan hidup dengan penuh semangat. Novel ini mengajarkan nilai kesabaran, keteguhan iman, dan cinta keluarga.",
+gambar:"https://iili.io/C3Ka07e.jpg",
+Stok :"130"
+},
+
+"Kisah Mukjizat Nabi":{
+penerbit:"Pustaka Sandro Jaya, 2017",
+ringkasan:"Buku Kisah Mukjizat Nabi menceritakan berbagai mukjizat yang diberikan Allah kepada para nabi dan rasul, seperti Nabi Adam, Nabi Nuh, Nabi Ibrahim, Nabi Musa, Nabi Isa, hingga Nabi Muhammad SAW. Cerita disampaikan dengan bahasa yang mudah dipahami sehingga dapat menambah pengetahuan, memperkuat keimanan, serta memberikan teladan dari perjuangan para nabi dalam menyampaikan ajaran Allah.",
+gambar:"https://iili.io/C3Kc3ve.jpg",
+Stok :"130"
+},
+
+"Balon Merah":{
+penerbit:"Irene Tanurajaya, 2013",
+ringkasan:"Balon Merah mengisahkan seorang anak bernama Dree yang tertarik pada sebuah balon merah misterius yang melayang tinggi di langit. Dengan mengikuti tali balon tersebut, Dree menjalani petualangan yang penuh tantangan. Perjalanan itu mengajarkannya tentang harapan, keberanian, dan cara melihat keindahan serta makna kehidupan dari sudut pandang yang berbeda.",
+gambar:"https://iili.io/C3KcyNa.jpg",
+Stok :"130"
+},
+
+"Tahajud Cinta":{
+penerbit:"Zikrul Hakim, 2008",
+ringkasan:"Novel Tahajud Cinta mengisahkan perjalanan seorang tokoh yang menghadapi berbagai ujian kehidupan, seperti masalah keluarga, cinta, dan keimanan. Di tengah berbagai cobaan tersebut, ia menemukan ketenangan melalui ibadah tahajud dan semakin mendekatkan diri kepada Tuhan. Cerita ini mengajarkan bahwa kesabaran, doa, dan keteguhan iman dapat menjadi jalan untuk menghadapi setiap kesulitan hidup.",
+gambar:"https://iili.io/C3K0KLx.jpg",
+Stok :"130"
+},
+
+"Rasa Hati":{
+penerbit:"Bernard Batubara, 2017",
+ringkasan:"Rasa Hati menceritakan perjalanan tokoh-tokohnya dalam menghadapi berbagai persoalan kehidupan, seperti cinta, persahabatan, keluarga, dan pencarian jati diri. Novel ini menggambarkan bagaimana setiap keputusan yang diambil berdasarkan perasaan dapat membawa pelajaran berharga tentang kehidupan dan kedewasaan.",
+gambar:"https://iili.io/C3K0ZyF.jpg",
+Stok :"130"
+},
+
+"Anak Jalanan":{
+penerbit:"Teguh Esha, 1977",
+ringkasan:"Novel ini menceritakan kehidupan Ali Topan, seorang remaja yang dikenal sebagai anak jalanan tetapi memiliki jiwa pemberani, setia kawan, dan menjunjung tinggi keadilan. Di tengah berbagai konflik keluarga, persahabatan, dan kisah cintanya, Ali Topan berusaha mempertahankan prinsip hidupnya serta menghadapi berbagai tantangan kehidupan remaja.",
+gambar:"https://iili.io/C3KEBHP.jpg",
+Stok :"130"
+},
+
+"Rumah Tanpa Jendela":{
+penerbit:"Asma Nadia, 2011",
+ringkasan:"Novel Rumah Tanpa Jendela menceritakan tentang Rara, seorang anak perempuan dari keluarga sederhana yang memiliki impian sederhana, yaitu memiliki rumah dengan sebuah jendela. Melalui kisahnya, pembaca diajak untuk memahami arti perjuangan, harapan, rasa syukur, dan pentingnya tidak menyerah dalam meraih cita-cita meskipun hidup penuh keterbatasan.",
+gambar:"https://iili.io/C3KGO2p.jpg",
+Stok :"130"
+},
+
+"Rindu Ibu":{
+penerbit:"Darwis Tere Liye, 2014",
+ringkasan:"Novel Rindu Ibu mengisahkan tentang kasih sayang seorang ibu yang begitu besar kepada anak-anaknya. Cerita ini menggambarkan perjuangan, pengorbanan, dan cinta tanpa syarat seorang ibu dalam menghadapi berbagai tantangan hidup. Melalui kisah yang menyentuh, pembaca diajak untuk menghargai keberadaan ibu serta pentingnya kasih sayang dan keluarga.",
+gambar:"https://iili.io/C3KMOMb.jpg",
+Stok :"130"
+},
+
+"Semeliar Cinta Untuk Bunda":{
+penerbit:"Rina Suryakusuma, 2018",
+ringkasan:"Buku Semeliar Cinta Untuk Bunda mengisahkan kasih sayang yang tulus antara seorang anak dan ibunya. Cerita ini menggambarkan pengorbanan, perjuangan, serta cinta tanpa syarat seorang bunda dalam membesarkan anaknya. Melalui kisah yang menyentuh, pembaca diajak untuk lebih menghargai peran ibu dan pentingnya berbakti kepada orang tua.",
+gambar:"https://iili.io/C3KVa5B.jpg",
+Stok :"130"
+},
+
+"Kantorku Surgaku":{
+penerbit:"Diva Press, 2014",
+ringkasan:"Buku Kantorku Surgaku membahas bagaimana menjadikan tempat kerja sebagai lingkungan yang nyaman, menyenangkan, dan penuh semangat. Penulis memberikan motivasi serta tips untuk meningkatkan etos kerja, membangun hubungan yang baik dengan rekan kerja, dan bekerja secara profesional sehingga pekerjaan dapat menjadi sarana meraih kesuksesan sekaligus kebahagiaan.",
+gambar:"https://iili.io/C3KW7Bs.jpg",
+Stok :"130"
+},
+
+"Keluarga Cemara":{
+penerbit:"Arswendo Atmowiloto, 2019",
+ringkasan:"Keluarga Cemara mengisahkan kehidupan sebuah keluarga yang harus beradaptasi setelah mengalami kebangkrutan. Abah, Emak, Euis, Ara, dan Agil pindah ke desa dan memulai hidup sederhana. Melalui berbagai tantangan, mereka menunjukkan bahwa kebahagiaan tidak ditentukan oleh harta, melainkan oleh kasih sayang, kerja keras, dan kebersamaan dalam keluarga.",
+gambar:"https://iili.io/C3KYnNj.jpg",
+Stok :"130"
+},
+
+"Mengenal Rangka Tubuh":{
+penerbit:"Erlangga, 2010",
+ringkasan:"Buku “Mengenal Rangka Tubuh” membahas tentang sistem rangka pada manusia, mulai dari fungsi rangka, jenis-jenis tulang, hingga cara kerja rangka dalam menopang tubuh dan membantu pergerakan. Buku ini juga menjelaskan bagian-bagian tulang seperti tengkorak, tulang belakang, dan tulang anggota gerak dengan bahasa yang sederhana agar mudah dipahami oleh siswa.",
+gambar:"https://iili.io/C3KhW0b.jpg",
+Stok :"130"
+},
+
+"Mengenal Tubuh Kita":{
+penerbit:"Yudhistira, 2011",
+ringkasan:"Buku Mengenal Tubuh Kita menjelaskan bagian-bagian tubuh manusia, mulai dari kepala hingga kaki, serta fungsi masing-masing organ seperti jantung, paru-paru, otak, dan panca indra. Buku ini juga membantu pembaca memahami cara menjaga kesehatan tubuh melalui pola hidup bersih, makanan sehat, dan olahraga.",
+gambar:"https://iili.io/C3KwvKg.jpg",
+Stok :"130"
+},
+
+"Mengenal Mamalia":{
+penerbit:"Erlangga, 2011",
+ringkasan:"Buku Mengenal Mamalia berisi penjelasan tentang hewan mamalia, yaitu hewan yang menyusui anaknya. Di dalamnya dibahas ciri-ciri mamalia, habitat, jenis-jenis mamalia darat dan air, serta contoh-contoh seperti sapi, kucing, lumba-lumba, dan gajah. Buku ini bertujuan untuk membantu pembaca memahami keanekaragaman hewan mamalia di sekitar kita dengan bahasa yang sederhana dan mudah dipahami.",
+gambar:"https://iili.io/C3KNQIV.jpg",
+Stok :"130"
+},
+
+"Mengenal Lingkungan Sekitar Kita":{
+penerbit:"Yudhistira, 2011",
+ringkasan:"Buku Mengenal Lingkungan Sekitar Kita membahas pengenalan lingkungan yang ada di sekitar siswa, seperti lingkungan rumah, sekolah, serta lingkungan alam seperti air, tanah, udara, tumbuhan, dan hewan. Buku ini juga menjelaskan pentingnya menjaga kebersihan dan kelestarian lingkungan agar tetap sehat dan nyaman untuk kehidupan manusia. Selain itu, siswa diajarkan untuk peduli terhadap lingkungan dan menerapkan kebiasaan baik dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3Ke2cu.jpg",
+Stok :"130"
+},
+
+"Mititgasi Bencana":{
+penerbit:"Graha Printama Selaras, 2019",
+ringkasan:"Buku Mitigasi Bencana membahas berbagai jenis bencana alam dan nonalam yang dapat terjadi di Indonesia, seperti gempa bumi, banjir, tanah longsor, gunung meletus, dan tsunami. Selain itu, buku ini menjelaskan langkah-langkah mitigasi, kesiapsiagaan, serta cara penyelamatan diri sebelum, saat, dan setelah terjadi bencana agar risiko kerugian dan korban dapat diminimalkan.",
+gambar:"https://iili.io/C3Kkcej.jpg",
+Stok :"130"
+},
+
+"Olimpiade Fisika":{
+penerbit:"Yrama Widya, 2019",
+ringkasan:"Buku ini berisi kumpulan materi, contoh soal, dan pembahasan fisika untuk persiapan olimpiade. Materi disusun secara bertahap sehingga membantu siswa memahami konsep fisika serta meningkatkan kemampuan dalam menyelesaikan soal-soal tingkat olimpiade.",
+gambar:"https://iili.io/C3K8jDv.jpg",
+Stok :"130"
+},
+
+"Menyelidiki Matahari":{
+penerbit:"Tiga Serangkai Pustaka Mandiri, 2009",
+ringkasan:"Buku Menyelidiki Matahari membahas tentang Matahari sebagai pusat tata surya, mulai dari bagian-bagiannya, manfaat bagi kehidupan di Bumi, hingga berbagai fenomena yang berkaitan dengan Matahari. Materi disajikan dengan bahasa yang sederhana sehingga mudah dipahami oleh pelajar.",
+gambar:"https://iili.io/C3KSIXR.jpg",
+Stok :"130"
+},
+
+"Menyelidiki Air Dan Manfaatnya":{
+penerbit:"Tiga Serangkai Pustaka Mandiri, 2019",
+ringkasan:"Buku Menyelidiki Air dan Manfaatnya membahas tentang sifat-sifat air, manfaat air bagi makhluk hidup, serta pentingnya menjaga kebersihan dan kelestarian sumber air. Buku ini juga dilengkapi dengan kegiatan sederhana yang membantu siswa memahami konsep air melalui pengamatan dan percobaan.",
+gambar:"https://iili.io/C3KUo37.jpg",
+Stok :"130"
+},
+
+"Menyelidiki Udara":{
+penerbit:"Erlangga, 2008",
+ringkasan:"Buku Menyelidiki Udara membahas tentang udara sebagai bagian penting dalam kehidupan. Isinya menjelaskan sifat-sifat udara, kandungan udara, manfaat udara bagi makhluk hidup, serta berbagai percobaan sederhana yang membantu pembaca memahami bahwa udara memiliki massa, menempati ruang, dan dapat bergerak. Buku ini disajikan dengan bahasa yang mudah dipahami sehingga cocok sebagai media pembelajaran IPA bagi siswa.",
+gambar:"https://iili.io/C3KUsFS.jpg",
+Stok :"130"
+},
+
+"Rahasia Sains":{
+penerbit:"Elex Media Komputindo, 2016",
+ringkasan:"Buku ini membahas berbagai fakta dan fenomena sains yang menarik, seperti alam semesta, tubuh manusia, hewan, tumbuhan, dan teknologi. Materinya disajikan dengan bahasa yang mudah dipahami serta dilengkapi ilustrasi sehingga pembaca lebih mudah memahami konsep-konsep sains.",
+gambar:"https://iili.io/C3KgEf2.jpg",
+Stok :"130"
+},
+
+"Mengenal Moluska":{
+penerbit:"Graha Printama Selaras, 2019",
+ringkasan:"Buku Mengenal Moluska membahas kelompok hewan moluska, seperti siput, kerang, cumi-cumi, dan gurita. Materi di dalamnya menjelaskan ciri-ciri, klasifikasi, habitat, cara berkembang biak, serta peran moluska dalam kehidupan manusia dan lingkungan dengan bahasa yang mudah dipahami.",
+gambar:"https://iili.io/C3K4IyX.jpg",
+Stok :"130"
+},
+
+"Mengenal Teknologi Robot":{
+penerbit:"Balai Pustaka, 2018",
+ringkasan:"Buku ini menjelaskan dasar-dasar teknologi robot, mulai dari pengertian robot, sejarah perkembangan robotika, komponen utama robot, hingga contoh penerapan robot dalam kehidupan sehari-hari dan dunia industri. Materi disajikan dengan bahasa yang sederhana sehingga mudah dipahami oleh pelajar.",
+gambar:"https://iili.io/C3Kj4n9.jpg",
+Stok :"130"
+},
+
+"Pahlawan Nasional":{
+penerbit:"Familia, 2015",
+ringkasan:"Buku ini memperkenalkan tokoh-tokoh pahlawan nasional Indonesia beserta riwayat hidup, perjuangan, dan jasa-jasanya dalam memperjuangkan kemerdekaan bangsa. Disajikan dengan bahasa yang mudah dipahami sehingga cocok sebagai bahan pembelajaran dan menumbuhkan semangat nasionalisme.",
+gambar:"https://iili.io/C3faFn4.jpg",
+Stok :"130"
+},
+
+"Mitigasi Bencana Alam":{
+penerbit:"Graha Ilmu, 2018",
+ringkasan:"Buku ini membahas cara mengurangi dampak bencana alam seperti gempa bumi, banjir, longsor, dan tsunami. Isinya menjelaskan langkah-langkah pencegahan (mitigasi), kesiapsiagaan, serta tindakan saat dan setelah bencana terjadi. Tujuannya agar masyarakat lebih siap dan mampu mengurangi risiko kerugian akibat bencana.",
+gambar:"https://iili.io/C3fcPLv.jpg",
+Stok :"130"
+},
+
+"Merdeka":{
+penerbit:"Gramedia, 2016",
+ringkasan:"Buku ini menceritakan perjuangan dan makna kemerdekaan Indonesia, mulai dari perjuangan para pahlawan hingga bagaimana generasi sekarang mengisi kemerdekaan dengan hal-hal positif seperti belajar, disiplin, dan menghargai jasa pahlawan.",
+gambar:"https://iili.io/C3flW3N.jpg",
+Stok :"130"
+},
+
+"Gempa Bumi":{
+penerbit:"Rani Siti Fitriani, 2017",
+ringkasan:"Buku ini menjelaskan tentang pengertian gempa bumi, penyebab terjadinya gempa (pergeseran lempeng tektonik, aktivitas vulkanik, dan runtuhan), jenis-jenis gempa, serta dampaknya terhadap kehidupan manusia. Buku ini juga membahas cara mengurangi risiko bencana gempa dan langkah-langkah penyelamatan diri saat gempa terjadi.",
+gambar:"https://iili.io/C3f0Plp.jpg",
+Stok :"130"
+},
+
+"Kekayaan Sumber Daya Indonesia":{
+penerbit:"Heri Sucitro, 2008",
+ringkasan:"Buku Kekayaan Sumber Daya Indonesia membahas berbagai potensi kekayaan Indonesia, baik sumber daya alam maupun sumber daya manusia. Isinya menjelaskan bahwa Indonesia memiliki kekayaan alam yang melimpah seperti hasil bumi, tambang, dan sumber daya hayati, serta didukung oleh jumlah penduduk yang besar sebagai sumber daya manusia. Buku ini juga menekankan pentingnya rasa syukur, cinta tanah air, dan pemanfaatan sumber daya secara bijak agar dapat meningkatkan kesejahteraan bangsa.",
+gambar:"https://iili.io/C3f1bkP.jpg",
+Stok :"130"
+},
+
+"Kenakalan Remaja Dan Penanggulangannya":{
+penerbit:"Kartini Kartono, 2005",
+ringkasan:"Buku ini membahas tentang perilaku kenakalan remaja seperti bolos sekolah, tawuran, penyalahgunaan narkoba, pergaulan bebas, dan pelanggaran aturan sosial lainnya. Selain itu, buku ini juga menjelaskan faktor penyebab kenakalan remaja, seperti lingkungan keluarga, pergaulan teman sebaya, dan pengaruh media. Di bagian akhir, dibahas juga cara penanggulangan, seperti peran orang tua, sekolah, serta pembinaan karakter agar remaja dapat berkembang secara positif.",
+gambar:"https://iili.io/C3fEeZg.jpg",
+Stok :"130"
+},
+
+"Indonesia Di Pertemuan 3 Lempeng Bumi":{
+penerbit:"Eni Anjayani, 2010",
+ringkasan:"Buku ini membahas posisi geografis Indonesia yang berada di pertemuan tiga lempeng tektonik utama, yaitu Lempeng Indo-Australia, Lempeng Eurasia, dan Lempeng Pasifik. Pertemuan ini menyebabkan Indonesia memiliki aktivitas tektonik yang tinggi, seperti gempa bumi, gunung api aktif, dan pembentukan relief bumi yang beragam. Selain itu, dijelaskan juga dampak positifnya seperti tanah yang subur akibat aktivitas vulkanik.",
+gambar:"https://iili.io/C3fGmWg.jpg",
+Stok :"130"
+},
+
+"Kerajinan Nusantara":{
+penerbit:"Intan Sejati, 2009",
+ringkasan:"Buku ini membahas berbagai jenis kerajinan tradisional Indonesia yang berasal dari keberagaman budaya setiap daerah. Isinya menjelaskan kerajinan tekstil, senjata tradisional, seni budaya, dan perhiasan. Tujuannya adalah mengenalkan kekayaan kerajinan Nusantara sekaligus menumbuhkan rasa cinta dan pelestarian budaya Indonesia pada generasi muda.",
+gambar:"https://iili.io/C3fMkrv.jpg",
+Stok :"130"
+},
+
+"Bumi Murka":{
+penerbit:"Ellen J. Prager, 2006",
+ringkasan:"Buku Bumi Murka menjelaskan tiga kekuatan besar alam yaitu gempa bumi, gunung berapi, dan tsunami. Buku ini membahas bagaimana proses terjadinya fenomena tersebut, penyebabnya dari pergerakan lempeng bumi, serta dampaknya terhadap kehidupan manusia. Selain itu, buku ini juga memberikan pengetahuan ilmiah agar pembaca lebih memahami dan waspada terhadap bencana alam.",
+gambar:"https://iili.io/C3fWKVn.jpg",
+Stok :"130"
+},
+
+"Dinamika Kebudayaan":{
+penerbit:"Benny Hoed, 2011",
+ringkasan:"Buku Dinamika Kebudayaan membahas bagaimana kebudayaan selalu berubah dan berkembang seiring waktu. Perubahan ini dipengaruhi oleh faktor sosial, politik, bahasa, dan perkembangan teknologi. Buku ini juga menjelaskan bagaimana simbol, bahasa, dan nilai dalam masyarakat ikut membentuk cara manusia berpikir dan berinteraksi. Selain itu, dijelaskan bahwa kebudayaan tidak bersifat tetap, tetapi terus mengalami perubahan melalui proses komunikasi dan interaksi sosial.",
+gambar:"https://iili.io/C3famWx.jpg",
+Stok :"130"
+},
+
+"Ada Duka Di Wibeng":{
+penerbit:"Jazimah Al-Muhyi, 2008",
+ringkasan:"Buku Ada Duka di Wibeng menceritakan kehidupan remaja di lingkungan sekolah yang diwarnai isu, konflik pergaulan, dan gosip yang berkembang cepat. Cerita berpusat pada kejadian dikeluarkannya beberapa siswa yang dianggap bermasalah, yang kemudian memicu berbagai reaksi dan perubahan suasana di sekolah. Kisah ini menggambarkan dinamika pertemanan, penilaian sosial, dan kehidupan remaja SMA dengan bahasa ringan.",
+gambar:"https://iili.io/C3fWP0G.jpg",
+Stok :"130"
+},
+
+"Ayo Terus Sekolah":{
+penerbit:"Sugeng Waluyo, 2010",
+ringkasan:"Buku ini membahas pentingnya pendidikan dan upaya mencegah anak putus sekolah, terutama di daerah pedesaan. Isi buku menyoroti faktor penyebab anak tidak melanjutkan sekolah seperti ekonomi, lingkungan, dan kurangnya kesadaran pendidikan, serta memberikan solusi dan dorongan agar anak tetap bersekolah demi masa depan yang lebih baik.",
+gambar:"https://iili.io/C3fjBKg.jpg",
+Stok :"130"
+},
+
+"Pedoman Kata Baku & Tidak Baku":{
+penerbit:"Dini Fitri, 2017",
+ringkasan:"Buku Pedoman Kata Baku & Tidak Baku berisi panduan penggunaan bahasa Indonesia yang benar sesuai kaidah. Di dalamnya terdapat daftar kata baku dan tidak baku yang disusun secara alfabetis, serta penjelasan tentang ejaan bahasa Indonesia, unsur serapan, dan pembentukan istilah. Buku ini membantu pembaca agar dapat menggunakan bahasa Indonesia yang baik dan benar, terutama dalam penulisan formal seperti tugas sekolah dan karya ilmiah.",
+gambar:"https://iili.io/C3fwlB1.jpg",
+Stok :"130"
+},
+
+"Bersahabat Dengan Kamus":{
+penerbit:"Rahayu Ummi Farida, 2016",
+ringkasan:"Buku ini berisi kumpulan materi pembelajaran bahasa yang bertujuan mengenalkan pentingnya kamus dalam memperkaya kosakata. Isinya membantu pembaca memahami makna kata, penggunaan bahasa yang benar, serta meningkatkan kemampuan berbahasa Indonesia dengan baik dan tepat.",
+gambar:"https://iili.io/C3fNpln.jpg",
+Stok :"130"
+},
+
+"Belajar Ejaan":{
+penerbit:"Sriyanto, 2016",
+ringkasan:"Buku ini menjelaskan kaidah ejaan bahasa Indonesia, meliputi pemakaian huruf, penulisan kata, penggunaan tanda baca, penulisan unsur serapan, serta sejarah perkembangan ejaan di Indonesia. Materinya disertai contoh agar mudah dipahami.",
+gambar:"https://iili.io/C3fehTx.jpg",
+Stok :"130"
+},
+
+"Cinta Itu Bukan Virus":{
+penerbit:"Jazimah Al-Muhyi, 2010",
+ringkasan:"menceritakan Aleysia Rovina (Vina), seorang gadis dari keluarga kaya yang memilih mondok di pesantren sederhana. Di sana ia mengalami konflik batin antara perasaan cinta dan aturan agama. Ia bertemu Gus Siddiq, putra kiai yang cerdas dan karismatik, namun hubungan mereka harus dibatasi oleh nilai-nilai syar’i. Cerita ini menyoroti perjuangan mengendalikan perasaan, pencarian makna cinta yang benar, dan kedewasaan dalam menjalani kehidupan.",
+gambar:"https://iili.io/C3fkyUF.jpg",
+Stok :"130"
+},
+
+"Pantang Menyerah":{
+penerbit:"Ardyan M. Erlangga, 2010",
+ringkasan:"Buku Pantang Menyerah berisi kisah dan pesan motivasi tentang sikap tidak mudah putus asa dalam menghadapi berbagai tantangan hidup. Buku ini mengajarkan bahwa kegagalan bukan akhir, tetapi awal untuk belajar dan berusaha lebih keras agar bisa mencapai keberhasilan.",
+gambar:"https://iili.io/C3f8lBp.jpg",
+Stok :"130"
+},
+
+"Indonesia Jaya":{
+penerbit:"Petrus Octavianus, 2005",
+ringkasan:"Buku ini berisi gagasan dan visi tentang masa depan Indonesia, terutama strategi pembangunan jangka panjang untuk menjadikan Indonesia negara yang maju dan kuat (jaya dan adidaya). Pembahasannya mencakup ekonomi, politik, sumber daya manusia, serta langkah-langkah pembangunan nasional untuk mencapai kemajuan Indonesia di masa depan.",
+gambar:"https://iili.io/C3fSmf2.jpg",
+Stok :"130"
+},
+
+"Penulis Cilik":{
+penerbit:"Mizan, 2010",
+ringkasan:"Buku ini berisi kumpulan cerita karya anak-anak (penulis cilik) yang menceritakan kehidupan sehari-hari, persahabatan, sekolah, dan pengalaman imajinatif mereka. Cerita-cerita dalam buku ini bertujuan untuk mengembangkan minat baca dan menulis sejak usia dini serta memberikan inspirasi bahwa anak-anak juga bisa menjadi penulis.",
+gambar:"https://iili.io/C3fgz42.jpg",
+Stok :"130"
+},
+
+"Ayo Mengenal Pragraf":{
+penerbit:"Marsa A, 2009",
+ringkasan:"Buku Ayo Mengenal Paragraf berisi penjelasan dasar tentang paragraf dalam bahasa Indonesia. Buku ini membahas pengertian paragraf, jenis-jenis paragraf, serta cara menyusun paragraf yang baik dan benar agar tulisan menjadi runtut, jelas, dan mudah dipahami.",
+gambar:"https://iili.io/C3fXsCF.jpg",
+Stok :"130"
+},
+
+"Papua Barat":{
+penerbit:"Intan Pariwara, 2009",
+ringkasan:"Buku ini membahas tentang Provinsi Papua Barat, meliputi kondisi geografis, letak wilayah, kekayaan alam, budaya masyarakat, serta potensi sumber daya yang dimiliki. Selain itu juga dijelaskan tantangan pembangunan di Papua Barat seperti infrastruktur, pendidikan, dan pemerataan kesejahteraan masyarakat.",
+gambar:"https://iili.io/C3f4KWG.jpg",
+Stok :"130"
+},
+
+"Kepulauan Riau":{
+penerbit:"Puriwara, 2010",
+ringkasan:"Buku ini membahas tentang Provinsi Kepulauan Riau yang meliputi kondisi geografis, letak wilayah, kekayaan alam, budaya, serta kehidupan masyarakatnya. Dijelaskan juga bahwa Kepulauan Riau terdiri dari banyak pulau yang strategis karena berada di jalur perdagangan internasional serta memiliki potensi maritim yang besar.",
+gambar:"https://iili.io/C3f6FkP.jpg",
+Stok :"130"
+},
+
+"Nusa Tenggara Timur":{
+penerbit:"Gandes Cukat Permaty, 2018",
+ringkasan:"Buku ini membahas gambaran umum Provinsi Nusa Tenggara Timur, mulai dari kondisi geografis, budaya, adat istiadat, serta potensi alam dan pariwisata. NTT dijelaskan sebagai wilayah kepulauan dengan kekayaan budaya yang beragam serta memiliki potensi wisata alam seperti pantai, pulau-pulau kecil, dan taman nasional.",
+gambar:"https://iili.io/C3fP3Pf.png",
+Stok :"130"
+},
+
+"Sulawesi Selatan":{
+penerbit:"Nurlina Arisnawati, 2016",
+ringkasan:"Buku ini menceritakan tentang Sulawesi Selatan, mulai dari budaya, adat istiadat, dan cerita rakyat daerah Bugis, Makassar, dan Mandar. Selain itu, buku ini juga mengenalkan nilai-nilai kearifan lokal serta kehidupan sosial masyarakat Sulawesi Selatan agar pembaca lebih memahami kekayaan budaya daerah tersebut.",
+gambar:"https://iili.io/C3fifsa.jpg",
+Stok :"130"
+},
+
+"Papua":{
+penerbit:"Giyarto, 2018",
+ringkasan:"Buku ini menjelaskan tentang kondisi wilayah Papua yang meliputi letak geografis, iklim, sumber daya alam, keanekaragaman budaya, suku-suku, serta potensi daerahnya. Buku ini juga memperkenalkan kehidupan masyarakat Papua dan kekayaan alamnya sebagai bagian dari Indonesia.",
+gambar:"https://iili.io/C3fLgfa.png",
+Stok :"130"
+},
+
+"Sulawesi Barat":{
+penerbit:"Nugroho Yuanto, 2008",
+ringkasan:"Buku ini membahas tentang Provinsi Sulawesi Barat, mulai dari kondisi geografis, sejarah pembentukan provinsi, budaya masyarakat (terutama suku Mandar), serta potensi sumber daya alam dan ekonomi. Selain itu juga dijelaskan kehidupan sosial masyarakat yang banyak berkaitan dengan laut dan tradisi maritim.",
+gambar:"https://iili.io/C3fZHEg.jpg",
+Stok :"130"
+},
+
+"Sulawesi Tengah":{
+penerbit:"Nurul Hidayah, 2018",
+ringkasan:"Buku ini membahas Provinsi Sulawesi Tengah dari segi geografi, kekayaan alam, budaya, dan kehidupan masyarakatnya. Dijelaskan kondisi wilayah seperti pegunungan, laut, serta Danau Poso, serta keberagaman suku seperti Kaili, Pamona, dan Mori. Buku ini juga menekankan potensi sumber daya alam serta pentingnya menjaga kelestarian lingkungan dan budaya daerah.",
+gambar:"https://iili.io/C3ft0DN.jpg",
+Stok :"130"
+},
+
+"Sulawesi Tenggara":{
+penerbit:"Dr. Basrin Melamba, 2009",
+ringkasan:"Buku ini membahas kondisi sosial, budaya, dan lingkungan di Sulawesi Tenggara, termasuk adat istiadat, bahasa daerah, tradisi, serta potensi alam. Buku ini juga menekankan pentingnya pelestarian budaya lokal dan menjaga lingkungan agar tetap lestari.",
+gambar:"https://iili.io/C3fD17j.jpg",
+Stok :"130"
+},
+
+"Sulawesi Utara":{
+penerbit:"Maria Heny Pratiknjo, 2016",
+ringkasan:"Buku ini membahas tentang Provinsi Sulawesi Utara yang mencakup kondisi geografis, letak wilayah, keadaan alam, penduduk, budaya, serta potensi daerah seperti pariwisata (Bunaken), perikanan, dan hasil pertanian. Selain itu juga dijelaskan keragaman suku dan budaya serta kegiatan ekonomi masyarakat di Sulawesi Utara.",
+gambar:"https://iili.io/C3fbYjp.jpg",
+Stok :"130"
+},
+
+"Sumatra Barat":{
+penerbit:"Departemen Pendidikan dan Kebudayaan, 1997",
+ringkasan:"Buku ini menjelaskan kondisi wilayah Sumatera Barat dari berbagai aspek, seperti letak geografis, sejarah, kebudayaan, dan kehidupan masyarakat Minangkabau. Selain itu, dibahas juga kondisi alam seperti pegunungan, pantai, serta pengaruhnya terhadap mata pencaharian masyarakat. Buku ini bertujuan memberikan gambaran lengkap tentang karakteristik daerah Sumatera Barat.",
+gambar:"https://iili.io/C3fmwJa.jpg",
+Stok :"130"
+},
+
+"Sumatra Selatan":{
+penerbit:"Moh. Farukhi, 2019",
+ringkasan:"Buku ini menjelaskan tentang Provinsi Sumatera Selatan, mulai dari letak geografis, kondisi alam, sejarah, budaya, hingga potensi sumber daya daerahnya. Sumatera Selatan dikenal dengan ibu kota Palembang dan memiliki kekayaan alam seperti minyak bumi, gas, serta hasil pertanian. Buku ini juga mengenalkan identitas daerah dan perkembangan sosial masyarakat Sumatera Selatan.",
+gambar:"https://iili.io/C3fy9CN.jpg",
+Stok :"130"
+},
+
+"Sumatra Utara":{
+penerbit:"Departemen Pendidikan dan Kebudayaan, 1998",
+ringkasan:"Buku ini membahas kondisi wilayah Sumatra Utara yang meliputi letak geografis, kondisi alam, penduduk, serta kebudayaan daerah. Selain itu dijelaskan juga potensi sumber daya alam, kehidupan sosial masyarakat, dan keragaman budaya yang ada di provinsi Sumatra Utara.",
+gambar:"https://iili.io/C3q9doQ.jpg",
+Stok :"130"
+},
+
+"Nusa Tenggara Barat":{
+penerbit:"Departemen Pendidikan dan Kebudayaan, 1999",
+ringkasan:"Buku ini membahas tentang Provinsi Nusa Tenggara Barat, meliputi kondisi geografis, sejarah, adat istiadat, budaya, mata pencaharian masyarakat, serta potensi alam seperti pariwisata dan hasil sumber daya daerah. Buku ini bertujuan memberikan wawasan tentang keberagaman dan kekayaan daerah NTB.",
+gambar:"https://iili.io/C3f4XLJ.png",
+Stok :"130"
+},
+
+"Segitiga":{
+penerbit:"Cempaka Putih, 2010",
+ringkasan:"Buku ini menjelaskan bahwa Indonesia berada di pertemuan tiga lempeng tektonik aktif, yaitu Indo-Australia, Eurasia, dan Pasifik. Kondisi ini menyebabkan Indonesia sering mengalami gempa bumi, tsunami, dan aktivitas gunung api. Selain dampak negatif, pergerakan lempeng juga membuat tanah Indonesia subur dan memiliki bentuk permukaan bumi yang beragam.",
+gambar:"https://iili.io/C3qH8ps.jpg",
+Stok :"130"
+},
+
+"Berat, Waktu Dan Pengukuran":{
+penerbit:"Didik Djunaedi, 2010",
+ringkasan:"Buku ini membahas konsep dasar pengukuran seperti berat, waktu, dan berbagai jenis satuan pengukuran. Isi buku menjelaskan cara mengukur besaran dalam kehidupan sehari-hari dengan alat ukur yang tepat, serta mengenalkan konsep satuan standar dalam sistem pengukuran. Buku ini membantu pembaca memahami hubungan antara pengukuran dan penerapannya dalam aktivitas sehari-hari.",
+gambar:"https://iili.io/C3qd7UP.jpg",
+Stok :"130"
+},
+
+"Siku-Siku":{
+penerbit:"Abdul Azis Saefudin, 2010",
+ringkasan:"Buku “Siku-Siku” membahas konsep segitiga siku-siku dalam matematika, termasuk sifat-sifat sudut 90°, teorema Pythagoras, serta penerapannya dalam kehidupan sehari-hari seperti pengukuran bangunan dan perhitungan jarak.",
+gambar:"https://iili.io/C3q3f99.jpg",
+Stok :"130"
+},
+
+"Garis Dan Kedudukannya":{
+penerbit:"Dewi Marsiyah, 2018",
+ringkasan:"Buku ini membahas konsep dasar geometri tentang garis dan kedudukan titik dalam bidang. Materinya mencakup pengertian titik, garis lurus, garis lengkung, serta hubungan antar garis seperti sejajar, berpotongan, dan berimpit. Penjelasan dikaitkan dengan contoh kehidupan sehari-hari agar mudah dipahami, seperti posisi pemain sepak bola, lintasan bola, dan rel kereta api.",
+gambar:"https://iili.io/C3qFtXs.jpg",
+Stok :"130"
+},
+
+"Mengukur Bangun Datar":{
+penerbit:"Mianto, 2018",
+ringkasan:"Buku ini membahas konsep pengukuran bangun datar, khususnya pada materi lingkaran. Isi buku menjelaskan cara menghitung keliling, luas, jari-jari, diameter, sudut pusat, juring, dan tembereng. Buku ini juga mengaitkan konsep bangun datar dengan kehidupan sehari-hari sehingga lebih mudah dipahami oleh siswa.",
+gambar:"https://iili.io/C3qKtyP.jpg",
+Stok :"130"
+},
+
+"Trik-Trik Berhitung":{
+penerbit:"Edward H. Julius, 2005",
+ringkasan:"Buku Trik-Trik Berhitung berisi kumpulan cara cepat (trik) dalam melakukan operasi matematika seperti penjumlahan, pengurangan, perkalian, dan pembagian tanpa kalkulator. Tujuannya agar pembaca dapat menghitung lebih cepat dan mudah dengan teknik mental matematika, sehingga membantu dalam pelajaran maupun kehidupan sehari-hari.",
+gambar:"https://iili.io/C3qfPDX.jpg",
+Stok :"130"
+},
+
+"Bilangan":{
+penerbit:"Eni Anjayani, 2010",
+ringkasan:"Buku ini menjelaskan bahwa Indonesia berada di pertemuan tiga lempeng tektonik utama yaitu Indo-Australia, Eurasia, dan Pasifik. Kondisi ini menyebabkan Indonesia sering mengalami gempa bumi, letusan gunung api, dan tsunami. Selain itu, buku ini juga membahas dampak positif seperti tanah yang subur akibat aktivitas vulkanik serta pentingnya pemahaman bencana untuk mitigasi dan keselamatan masyarakat.",
+gambar:"https://iili.io/C3qoCEg.jpg",
+Stok :"130"
+},
+
+"Alat Analisis Data":{
+penerbit:"Andi, 2019",
+ringkasan:"Buku ini membahas penggunaan alat analisis statistik untuk penelitian di bidang ekonomi dan sosial. Isi buku menjelaskan berbagai teknik analisis data seperti uji hubungan, uji beda, dan uji pengaruh. Selain itu, buku ini juga memandu pembaca mulai dari penyusunan hipotesis, pengolahan data, hingga interpretasi hasil analisis secara sistematis agar mudah dipahami oleh peneliti pemula.",
+gambar:"https://iili.io/C3qxVUJ.jpg",
+Stok :"130"
+},
+
+"Struktur Aljabar":{
+penerbit:"Herry Agus Susanto, 2019",
+ringkasan:"Buku Struktur Aljabar membahas konsep dasar aljabar abstrak seperti operasi biner, grup, subgrup, koset, homomorfisme, ring, dan ideal. Buku ini menjelaskan bagaimana struktur matematika dibentuk dari himpunan dan operasi yang memiliki sifat tertentu. Tujuannya agar pembaca memahami hubungan dan pola dalam sistem aljabar yang menjadi dasar banyak bidang matematika lanjutan seperti teori bilangan, kriptografi, dan matematika modern.",
+gambar:"https://iili.io/C3qz0ml.jpg",
+Stok :"130"
+},
+
+"Matematika Smp":{
+penerbit:"Wono Setya Budhi, 2015",
+ringkasan:"Buku ini berisi materi matematika SMP seperti bilangan, aljabar, persamaan, geometri, statistika, dan peluang. Disusun berdasarkan kurikulum sekolah dan dilengkapi contoh soal serta latihan untuk membantu siswa memahami konsep matematika secara bertahap dan sistematis.",
+gambar:"https://iili.io/C3qTzPt.jpg",
+Stok :"130"
+},
+
+"Bahasa Arab Untuk Dasar":{
+penerbit:"H. Syamsuddin Asyrofi, 2006",
+ringkasan:"Buku ini merupakan buku pengantar pembelajaran bahasa Arab bagi pemula. Materinya mencakup pengenalan huruf hijaiyah, kosakata dasar, tata bahasa (nahwu dan sharaf) sederhana, latihan membaca, menulis, serta percakapan sehari-hari. Buku ini disusun secara bertahap agar memudahkan pembaca memahami dasar-dasar bahasa Arab.",
+gambar:"https://iili.io/C3qumCB.jpg",
+Stok :"130"
+},
+
+"Kumpulan doa dalam Al-Qur'an":{
+penerbit:"Sygma Media, 2017",
+ringkasan:"Buku Kumpulan Doa dalam Al-Qur'an berisi berbagai doa yang terdapat dalam Al-Qur'an, mulai dari doa para nabi hingga doa untuk memohon ampunan, rezeki, kesehatan, keselamatan, dan petunjuk. Setiap doa biasanya disajikan dalam tulisan Arab, latin, terjemahan bahasa Indonesia, serta penjelasan singkat mengenai makna dan waktu yang dianjurkan untuk membacanya. Buku ini bertujuan membantu pembaca mengamalkan doa-doa Al-Qur'an dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3q5mCl.jpg",
+Stok :"130"
+},
+
+"Surat Terpilih Dan Makna Ringkas":{
+penerbit:"Arkan, 2016",
+ringkasan:"Buku Surat Terpilih dan Makna Ringkas berisi kumpulan surat-surat pilihan dalam Al-Qur'an yang dilengkapi dengan teks Arab, terjemahan bahasa Indonesia, serta penjelasan singkat mengenai kandungan dan makna setiap surat. Buku ini bertujuan membantu pembaca memahami isi Al-Qur'an dengan lebih mudah serta mengamalkan nilai-nilai yang terkandung di dalamnya.",
+gambar:"https://iili.io/C3qYbgS.jpg",
+Stok :"130"
+},
+
+"Hari-Hari Suci Umat Islam":{
+penerbit:"Sygma Examedia Arkanleema, 2015",
+ringkasan:"Buku Surat Terpilih dan Makna Ringkas berisi kumpulan surat-surat pilihan dalam Al-Qur'an yang dilengkapi dengan teks Arab, terjemahan bahasa Indonesia, serta penjelasan singkat mengenai kandungan dan makna setiap surat. Buku ini bertujuan membantu pembaca memahami isi Al-Qur'an dengan lebih mudah serta mengamalkan nilai-nilai yang terkandung di dalamnya.",
+gambar:"https://iili.io/C3qcUAX.jpg",
+Stok :"130"
+},
+
+"Mukjijat Nabi Dalam Al-Qur'an":{
+penerbit:"Syaikh Muhammad Mitwalli Al-Sya'rawi, 2015",
+ringkasan:"Buku ini membahas berbagai mukjizat yang diberikan Allah kepada para nabi sebagaimana diceritakan dalam Al-Qur'an. Isinya menjelaskan makna, hikmah, dan tujuan setiap mukjizat sebagai bukti kerasulan para nabi serta pelajaran yang dapat diambil untuk memperkuat keimanan dan ketakwaan kepada Allah SWT.",
+gambar:"Mhttps://iili.io/C3q0dIn.jpg",
+Stok :"130"
+},
+
+"Mengenal Huruf Hijaiyah":{
+penerbit:"Bhuana Ilmu Populer, 2012",
+ringkasan:"Buku ini memperkenalkan 29 huruf hijaiyah kepada anak-anak melalui gambar berwarna, latihan membaca, dan kegiatan sederhana sehingga memudahkan anak mengenal bentuk, nama, dan cara membaca huruf hijaiyah sebagai dasar belajar membaca Al-Qur'an.",
+gambar:"https://iili.io/C3q1ES2.jpg",
+Stok :"130"
+},
+
+"Muhammad SAW idolaku":{
+penerbit:"Muhammad Nizar, 2013",
+ringkasan:"Buku Muhammad SAW Idolaku menceritakan keteladanan Nabi Muhammad SAW sebagai sosok yang jujur, amanah, penyayang, dan bertanggung jawab. Melalui cerita yang mudah dipahami, buku ini mengajak pembaca, khususnya anak-anak dan remaja, untuk meneladani akhlak mulia Rasulullah dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3qGRBs.jpg",
+Stok :"130"
+},
+
+"Meneladani 99 sifat allah":{
+penerbit:"Ari Wulandari, 2009",
+ringkasan:"Buku ini membahas 99 nama-nama Allah (Asmaul Husna) melalui kisah-kisah yang dekat dengan kehidupan sehari-hari. Setiap cerita mengajarkan nilai-nilai seperti kasih sayang, kejujuran, kesabaran, tolong-menolong, dan rasa syukur, sehingga pembaca dapat memahami makna Asmaul Husna sekaligus meneladani sifat-sifat mulia tersebut dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3qMSHl.jpg",
+Stok :"130"
+},
+
+"Kumpulan Hadits":{
+penerbit:"Imam An-Nawawi, 2009",
+ringkasan:"Buku ini berisi kumpulan hadits Nabi Muhammad SAW yang membahas akhlak, ibadah, kejujuran, ilmu, persaudaraan, dan kehidupan sehari-hari. Hadits-hadits disajikan sebagai pedoman bagi umat Islam dalam menjalankan ajaran agama dan membentuk karakter yang baik.",
+gambar:"https://iili.io/C3qWuQ1.jpg",
+Stok :"130"
+},
+
+"20 Cerita Anak Muslim":{
+penerbit:"Nurul Ihsan, 2009",
+ringkasan:"Menceritakan perjalanan hidup 25 nabi secara sederhana agar mudah dipahami anak-anak.",
+gambar:"https://iili.io/C3qXXDB.jpg",
+Stok :"130"
+},
+
+"100 Hadits Qudsi":{
+penerbit:"Abu Fajar Al Qalami, 2016",
+ringkasan:"Buku 100 Hadits Qudsi berisi seratus hadis qudsi, yaitu hadis yang maknanya berasal dari Allah SWT dan disampaikan melalui Nabi Muhammad SAW dengan redaksi beliau. Buku ini membahas berbagai ajaran tentang keimanan, kasih sayang Allah, ibadah, taubat, akhlak, serta hubungan manusia dengan Allah dan sesama. Dilengkapi dengan terjemahan sehingga mudah dipahami oleh pembaca.",
+gambar:"https://iili.io/C3qjgnI.jpg",
+Stok :"130"
+},
+
+"Aku Cinta Damai":{
+penerbit:"Aep Saefulloh, 2008",
+ringkasan:"Buku Aku Cinta Damai mengajarkan pentingnya hidup rukun, saling menghormati, dan menyelesaikan masalah tanpa kekerasan. Melalui cerita dan contoh sederhana, pembaca diajak untuk menumbuhkan sikap toleransi, menghargai perbedaan, serta menjaga persahabatan dan kedamaian dalam kehidupan sehari-hari. Buku ini cocok digunakan sebagai bacaan pendidikan karakter bagi anak dan remaja.",
+gambar:"https://iili.io/C3qRYOJ.jpg",
+Stok :"130"
+},
+
+"Pola-Pola Dalam Senam":{
+penerbit:"Yudhistira, 2008",
+ringkasan:"Pola-pola dalam senam adalah rangkaian gerakan dasar yang dilakukan secara teratur dan berurutan, seperti melangkah, mengayun, menekuk, dan memutar, yang biasanya disesuaikan dengan irama atau hitungan. Gerakan ini melibatkan koordinasi antara tangan, kaki, dan tubuh sehingga dilakukan secara seimbang dan terkontrol. Tujuan dari pola-pola dalam senam adalah untuk meningkatkan kebugaran jasmani, melatih kelenturan, kekuatan, keseimbangan, serta koordinasi tubuh agar gerakan menjadi lebih terampil dan sehat.",
+gambar:"https://iili.io/C3qN8BI.jpg",
+Stok :"130"
+},
+
+"Obat Yang Ada Di Sekitar Kita":{
+penerbit:"Kemdikbud, 2009",
+ringkasan:"Buku ini menjelaskan tentang berbagai jenis obat yang dapat ditemukan di lingkungan sekitar kita, terutama yang berasal dari bahan alami seperti tumbuhan. Di dalamnya dibahas contoh tanaman obat seperti jahe, kunyit, temulawak, dan daun sirih beserta manfaatnya bagi kesehatan. Selain itu, buku ini juga mengajarkan cara memanfaatkan obat tradisional secara tepat dan aman, serta memberikan pemahaman tentang perbedaan antara obat alami dan obat kimia. Tujuan dari buku ini adalah agar pembaca lebih mengenal dan memanfaatkan kekayaan alam sebagai sumber pengobatan sederhana dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3q8k0B.jpg",
+Stok :"130"
+},
+
+"Tenis Meja":{
+penerbit:"Erlangga, 2010",
+ringkasan:"Buku Tenis Meja membahas dasar-dasar permainan tenis meja mulai dari pengertian, sejarah, aturan permainan, hingga teknik dasar seperti cara memegang bet, servis, pukulan forehand dan backhand, serta strategi bermain. Buku ini juga menjelaskan peralatan yang digunakan seperti meja, bola, dan bet. Tujuannya adalah agar siswa memahami teknik dasar dan dapat mempraktikkan permainan tenis meja dengan benar dan sportif dalam pembelajaran PJOK.",
+gambar:"https://iili.io/C3qgHKl.jpg",
+Stok :"130"
+},
+
+"Stop Mirasantika":{
+penerbit:"Badan Narkotika Nasional (BNN), 2010",
+ringkasan:"Stop Mirasantika berisi penjelasan tentang bahaya penggunaan minuman keras, narkotika, dan zat adiktif yang dapat merusak kesehatan fisik, mental, serta kehidupan sosial seseorang. Materi ini juga menjelaskan dampak negatif seperti kecanduan, kerusakan organ tubuh, penurunan prestasi belajar, hingga masalah hukum. Selain itu, buku ini mengajak pembaca untuk menjauhi narkoba dan miras serta memilih pergaulan yang sehat agar masa depan lebih baik.",
+gambar:"https://iili.io/C3q6RO7.jpg",
+Stok :"130"
+},
+
+"Kacang Hijau":{
+penerbit:"Yudhistira, 2011",
+ringkasan:"Percobaan kacang hijau membahas proses pertumbuhan biji kacang hijau dari biji hingga menjadi kecambah. Dalam percobaan ini, biji kacang hijau ditanam di kapas yang lembap dan diletakkan di tempat terang atau gelap untuk mengamati pengaruh cahaya dan air terhadap pertumbuhannya. Hasilnya menunjukkan bahwa air sangat penting untuk perkecambahan, sedangkan cahaya memengaruhi pertumbuhan agar tanaman tidak tumbuh terlalu panjang dan lemah.",
+gambar:"https://iili.io/C3qZQ1e.jpg",
+Stok :"130"
+},
+
+"Tanaman Yang Mengandung Zat Pengganggu":{
+penerbit:"Kuncoro DM, 2006",
+ringkasan:"Buku ini membahas berbagai jenis tanaman yang menghasilkan zat kimia alami yang dapat menghambat atau mengganggu pertumbuhan tanaman lain di sekitarnya. Zat tersebut dikenal sebagai alelopati. Di dalamnya dijelaskan contoh tanaman, cara kerja zat tersebut, serta dampaknya terhadap lingkungan dan pertumbuhan tanaman lain. Buku ini juga memberikan gambaran tentang interaksi antar tumbuhan dalam ekosistem dan bagaimana senyawa alami tersebut dapat dimanfaatkan dalam bidang pertanian.",
+gambar:"https://iili.io/C3qb5b4.jpg",
+Stok :"130"
+},
+
+"Teori Bermain Catur":{
+penerbit:"Grafindo, 2008",
+ringkasan:"Buku “Teori Bermain Catur” berisi penjelasan tentang dasar-dasar permainan catur, mulai dari pengenalan papan catur, fungsi setiap bidak, hingga strategi dasar dalam menyerang dan bertahan. Buku ini juga mengajarkan teknik pembukaan (opening), permainan tengah (middle game), dan akhir permainan (end game). Tujuannya adalah membantu pemain pemula memahami cara berpikir strategis dalam bermain catur agar dapat meningkatkan kemampuan analisis dan perencanaan langkah.",
+gambar:"https://iili.io/C3BJcLx.jpg",
+Stok :"130"
+},
+
+"Olahraga Alam":{
+penerbit:"Grafindo, 2005",
+ringkasan:"Buku Olahraga Alam membahas berbagai aktivitas olahraga yang dilakukan di lingkungan luar ruangan, seperti hiking, camping, panjat tebing, dan kegiatan petualangan lainnya. Buku ini juga menjelaskan manfaat olahraga alam bagi kesehatan fisik dan mental, serta cara menjaga keselamatan saat melakukan aktivitas di alam terbuka. Selain itu, buku ini mengajarkan pentingnya kerja sama, disiplin, dan kepedulian terhadap lingkungan ketika beraktivitas di alam.",
+gambar:"https://iili.io/C3B33dB.jpg",
+Stok :"130"
+},
+
+"Panduan Sepak Bola":{
+penerbit:"Yudhistira, 2005",
+ringkasan:"Buku Panduan Sepak Bola menjelaskan dasar-dasar permainan sepak bola seperti teknik menggiring bola, mengoper, menendang, dan bertahan. Buku ini juga membahas aturan permainan, posisi pemain, serta strategi dasar dalam pertandingan. Tujuannya adalah membantu pemula memahami cara bermain sepak bola dengan benar dan meningkatkan keterampilan secara bertahap.",
+gambar:"https://iili.io/C3BFTCb.jpg",
+Stok :"130"
+},
+
+"Pola Hidup Sehat":{
+penerbit:"Erlangga, 2004",
+ringkasan:"Buku Pola Hidup Sehat membahas pentingnya menjaga kesehatan melalui kebiasaan sehari-hari seperti makan makanan bergizi, olahraga teratur, menjaga kebersihan diri, dan istirahat yang cukup. Buku ini juga menjelaskan dampak gaya hidup tidak sehat serta cara mencegah berbagai penyakit agar tubuh tetap bugar dan produktif dalam aktivitas sehari-hari.",
+gambar:"https://iili.io/C3qeQ07.jpg",
+Stok :"130"
+},
+
+"Berbakti Pada Orang Tua":{
+penerbit:"Hafidz Muftisany, 2018",
+ringkasan:"Buku Berbakti kepada Orang Tua membahas pentingnya menghormati, menyayangi, dan menaati orang tua sebagai salah satu kewajiban utama seorang anak menurut ajaran Islam. Melalui penjelasan yang sederhana dan disertai kisah-kisah inspiratif, buku ini mengajarkan berbagai bentuk bakti kepada orang tua, seperti berbicara dengan sopan, membantu mereka, mendoakan mereka, serta tidak menyakiti hati mereka. Buku ini juga menjelaskan bahwa berbakti kepada orang tua merupakan amalan yang mendatangkan keberkahan, pahala, dan ridha Allah, sehingga dapat menjadi pedoman bagi pembaca untuk menerapkannya dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3BBIRV.jpg",
+Stok :"130"
+},
+
+"Akhlak Siswa Terhadap Guru":{
+penerbit:"Murtini, 2008",
+ringkasan:"Buku Akhlak Siswa Terhadap Guru membahas pentingnya sikap dan perilaku yang baik seorang siswa terhadap guru sebagai bagian dari pembentukan karakter dan budi pekerti. Buku ini menjelaskan berbagai bentuk akhlak mulia, seperti menghormati guru, berbicara dengan sopan, mematuhi nasihat yang baik, bersikap santun di lingkungan sekolah, serta menghargai jasa guru dalam memberikan ilmu. Selain itu, buku ini mengajak siswa untuk menerapkan nilai-nilai moral tersebut dalam kehidupan sehari-hari agar tercipta hubungan yang harmonis antara guru dan siswa, sehingga proses belajar mengajar menjadi lebih efektif dan penuh rasa saling menghormati.",
+gambar:"https://iili.io/C3BxIrg.jpg",
+Stok :"130"
+},
+
+"Akhlak Siswa Terhadap Teman":{
+penerbit:"Drs. Loso, 2008",
+ringkasan:"Buku Akhlak Siswa Terhadap Teman membahas pentingnya memiliki akhlak yang baik dalam kehidupan sehari-hari, khususnya dalam berinteraksi dengan teman di lingkungan sekolah maupun masyarakat. Buku ini mengajarkan nilai-nilai seperti saling menghormati, jujur, tolong-menolong, menghargai perbedaan, menjaga sopan santun, serta menghindari perilaku yang dapat merugikan orang lain, seperti mengejek, bertengkar, dan berbohong. Melalui pembahasan yang sederhana, buku ini bertujuan membentuk karakter siswa agar menjadi pribadi yang berakhlak mulia, mampu menjalin hubungan yang baik dengan teman, serta menciptakan lingkungan pergaulan yang harmonis dan penuh rasa saling menghargai.",
+gambar:"https://iili.io/C3BIc0X.jpg",
+Stok :"130"
+},
+
+"Bakti Seorang Anak":{
+penerbit:"Nurul Ihsan, 2016",
+ringkasan:"Buku Bakti Seorang Anak menceritakan pentingnya sikap berbakti kepada kedua orang tua sebagai salah satu nilai utama dalam kehidupan. Melalui kisah-kisah sederhana yang dekat dengan kehidupan sehari-hari, pembaca diajarkan untuk menghormati, menaati, membantu, dan menyayangi orang tua dengan penuh keikhlasan. Buku ini juga menjelaskan bahwa berbakti kepada orang tua akan membawa kebaikan, keberkahan, serta menjadi jalan untuk memperoleh ridha Tuhan. Cerita disampaikan dengan bahasa yang mudah dipahami sehingga cocok dibaca oleh anak-anak dan remaja.",
+gambar:"https://iili.io/C3BuoAJ.jpg",
+Stok :"130"
+},
+
+"Budi Pekerti Bertamu":{
+penerbit:"Janu Murdiyatmoko, 2009",
+ringkasan:"Buku Budi Pekerti Bertamu membahas pentingnya menerapkan sikap sopan santun dan etika ketika bertamu maupun menerima tamu. Di dalamnya dijelaskan berbagai tata krama, seperti meminta izin sebelum masuk, mengucapkan salam, menghormati tuan rumah, menjaga tutur kata dan perilaku, serta berpamitan dengan baik sebelum pulang. Buku ini bertujuan menanamkan nilai-nilai budi pekerti kepada anak-anak agar terbiasa bersikap santun, menghargai orang lain, dan menjaga hubungan baik dalam kehidupan bermasyarakat.",
+gambar:"https://iili.io/C3BRYTG.jpg",
+Stok :"130"
+},
+
+"Pendidikan Budi Pekerti":{
+penerbit:"R. Toto Sugiharto, 2010",
+ringkasan:"Buku Pendidikan Budi Pekerti membahas pentingnya pembentukan karakter dan akhlak mulia dalam kehidupan sehari-hari. Materinya menjelaskan nilai-nilai seperti kejujuran, disiplin, tanggung jawab, kerja sama, sopan santun, kepedulian, dan rasa hormat kepada sesama. Selain memberikan pemahaman mengenai konsep budi pekerti, buku ini juga menyajikan contoh penerapan nilai-nilai tersebut di lingkungan keluarga, sekolah, dan masyarakat. Tujuan utama buku ini adalah membantu pembaca mengembangkan karakter yang baik sehingga mampu menjadi pribadi yang beretika, bertanggung jawab, dan bermanfaat bagi lingkungan sekitar.",
+gambar:"https://iili.io/C3B7Wzb.jpg",
+Stok :"130"
+},
+
+"Budi Pekerti Luhur":{
+penerbit:"Ambarwati, 2008",
+ringkasan:"Buku Budi Pekerti Luhur membahas pentingnya membentuk karakter dan akhlak mulia sejak usia dini melalui pembiasaan sikap positif dalam kehidupan sehari-hari. Isinya mengajarkan nilai-nilai seperti kejujuran, tanggung jawab, disiplin, sopan santun, saling menghormati, tolong-menolong, serta kepedulian terhadap sesama. Buku ini bertujuan memberikan bekal kepada peserta didik agar memiliki budi pekerti yang luhur sebagai landasan dalam berperilaku di lingkungan keluarga, sekolah, maupun masyarakat sehingga tumbuh menjadi pribadi yang berkarakter baik dan bertanggung jawab.",
+gambar:"https://iili.io/C3BalR9.jpg",
+Stok :"130"
+},
+
+"Hidup Berbhineka Tunggal Ika":{
+penerbit:"Vina Dwi Laning, 2015",
+ringkasan:"Buku Hidup Berbhinneka Tunggal Ika menjelaskan pentingnya memahami dan menghargai keberagaman suku, agama, budaya, bahasa, serta adat istiadat yang dimiliki Indonesia. Buku ini mengajarkan bahwa perbedaan bukanlah penyebab perpecahan, melainkan kekayaan bangsa yang harus dijaga dengan sikap saling menghormati, toleransi, dan gotong royong. Melalui penjelasan dan contoh dalam kehidupan sehari-hari, pembaca diajak menumbuhkan rasa cinta tanah air serta menerapkan nilai-nilai Bhinneka Tunggal Ika agar tercipta persatuan dan kerukunan di tengah masyarakat yang beragam.",
+gambar:"https://iili.io/C3Blv6v.jpg",
+Stok :"130"
+},
+
+"Ideologi Negara":{
+penerbit:"VDr. Kaelan, M.S, 2016",
+ringkasan:"Buku Ideologi Negara membahas pengertian ideologi, fungsi ideologi dalam kehidupan berbangsa dan bernegara, serta kedudukan Pancasila sebagai ideologi negara Indonesia. Penulis menjelaskan bahwa Pancasila menjadi dasar dalam penyelenggaraan kehidupan bermasyarakat, berbangsa, dan bernegara karena mengandung nilai-nilai ketuhanan, kemanusiaan, persatuan, kerakyatan, dan keadilan sosial. Selain itu, buku ini juga menjelaskan perkembangan ideologi di dunia serta pentingnya mempertahankan nilai-nilai Pancasila di tengah perkembangan global agar jati diri dan persatuan bangsa tetap terjaga.",
+gambar:"https://iili.io/C3B0tzF.jpg",
+Stok :"130"
+},
+
+"Ideologi Pancasila":{
+penerbit:"Bumi Aksara, 2015",
+ringkasan:"Buku tentang Ideologi Pancasila menjelaskan Pancasila sebagai dasar negara Indonesia yang menjadi pedoman dalam kehidupan berbangsa dan bernegara. Isi buku membahas nilai-nilai dari setiap sila, seperti ketuhanan, kemanusiaan, persatuan, musyawarah, dan keadilan sosial, serta bagaimana penerapannya dalam kehidupan sehari-hari. Selain itu, buku ini juga menjelaskan pentingnya Pancasila sebagai ideologi yang mempersatukan keberagaman suku, agama, dan budaya di Indonesia agar tercipta kehidupan yang harmonis dan adil.",
+gambar:"https://iili.io/C3BE0nn.jpg",
+Stok :"130"
+},
+
+"Sikap Dan Moral Menentukan Kesuksesan":{
+penerbit:"Dra. Hj. Sri Mulyati, 2008",
+ringkasan:"Buku Sikap dan Moral Penentu Kesuksesan membahas bahwa keberhasilan seseorang tidak hanya ditentukan oleh kecerdasan atau kemampuan akademik, tetapi juga oleh sikap dan moral yang dimiliki. Penulis menekankan pentingnya membentuk karakter positif seperti disiplin, jujur, kerja keras, tanggung jawab, dan sopan santun sejak dini. Buku ini juga menjelaskan bahwa kebiasaan berperilaku baik akan membantu seseorang lebih mudah mencapai kesuksesan dalam pendidikan, karier, maupun kehidupan sosial. Dengan kata lain, moral yang kuat menjadi dasar utama untuk membuka jalan menuju masa depan yang lebih baik.",
+gambar:"https://iili.io/C3BGSWX.jpg",
+Stok :"130"
+},
+
+"Tata Tertib Di Sekolah Dan Di Rumah":{
+penerbit:"Erlangga, 2009",
+ringkasan:"Buku atau materi “Tata Tertib di Sekolah dan di Rumah” berisi penjelasan tentang aturan-aturan yang harus dipatuhi siswa di lingkungan sekolah dan rumah. Di sekolah, siswa diajarkan untuk disiplin seperti datang tepat waktu, menghormati guru, menjaga kebersihan, dan mengikuti pelajaran dengan tertib. Di rumah, siswa juga diajarkan untuk patuh kepada orang tua, membantu pekerjaan rumah, serta menjaga sikap sopan dan tanggung jawab. Tujuan dari tata tertib ini adalah membentuk karakter siswa agar menjadi pribadi yang disiplin, bertanggung jawab, dan berperilaku baik dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3BV0n1.jpg",
+Stok :"130"
+},
+
+"Hubungan Internasional":{
+penerbit:"Mochtar , 2010",
+ringkasan:"Buku Hubungan Internasional membahas konsep dasar hubungan antarnegara dalam sistem global, termasuk bagaimana negara berinteraksi melalui politik, ekonomi, keamanan, dan diplomasi. Buku ini menjelaskan teori-teori utama dalam ilmu hubungan internasional seperti realisme, liberalisme, dan konstruktivisme, serta memberikan contoh kasus nyata hubungan antarnegara. Selain itu, buku ini juga menyoroti peran organisasi internasional, konflik, kerja sama global, dan perubahan dalam tatanan dunia modern. Buku ini banyak digunakan sebagai pengantar untuk memahami dinamika politik global secara lebih sistematis dan akademis.",
+gambar:"https://iili.io/C3BXk2s.jpg",
+Stok :"130"
+},
+
+"Akhlak Siswa Terhadap Alam":{
+penerbit:"Diah Soeprobowati , 2011",
+ringkasan:"Buku Akhlak Siswa Terhadap Alam membahas pentingnya sikap siswa dalam menjaga dan melestarikan lingkungan sebagai bagian dari akhlak dalam Islam. Buku ini menekankan bahwa alam harus diperlakukan sebagai amanah yang tidak boleh dirusak, sehingga siswa diajarkan untuk menjaga kebersihan, menghemat sumber daya alam, serta peduli terhadap lingkungan sekitar. Selain itu, buku ini juga menjelaskan bahwa kerusakan alam yang terjadi sering disebabkan oleh perilaku manusia yang tidak bertanggung jawab, sehingga pendidikan akhlak terhadap alam sangat penting untuk membentuk generasi yang sadar lingkungan dan berperilaku baik terhadap makhluk hidup maupun alam sekitar.",
+gambar:"https://iili.io/C3BCQGn.jpg",
+Stok :"130"
+},
+
+"Mengenal Teater":{
+penerbit:"M. Noor Said, 2017",
+ringkasan:"Buku Mengenal Teater berisi pengenalan dasar tentang seni pertunjukan teater, mulai dari pengertian teater, unsur-unsur pembentuknya seperti naskah, aktor, sutradara, panggung, dan properti, hingga proses produksi pertunjukan. Buku ini juga menjelaskan jenis-jenis teater tradisional dan modern, serta memberikan pemahaman tentang bagaimana sebuah pertunjukan dipersiapkan dari latihan hingga pementasan. Tujuannya adalah agar pembaca, khususnya siswa, dapat memahami seni teater sebagai bentuk ekspresi seni dan kerja sama tim dalam berkarya di atas panggung.",
+gambar:"https://iili.io/C3BwTkG.jpg",
+Stok :"130"
+},
+
+"Mengenal Pelukis Dunia Dan Indonesia":{
+penerbit:"Iwan Hendrawan, 2009",
+ringkasan:"Buku Mengenal Pelukis Dunia dan Indonesia karya Iwan Hendrawan berisi pengenalan tokoh-tokoh pelukis terkenal dari Indonesia maupun dunia. Di dalamnya dijelaskan biografi singkat para pelukis, perjalanan karier mereka dalam dunia seni rupa, serta gaya dan ciri khas lukisan yang mereka hasilkan. Buku ini bertujuan untuk memberikan wawasan dasar kepada pembaca tentang perkembangan seni lukis serta mengenalkan sosok-sosok penting yang berpengaruh dalam dunia seni, sehingga cocok digunakan sebagai bahan pembelajaran atau referensi seni rupa di sekolah.",
+gambar:"https://iili.io/C3Berjj.jpg",
+Stok :"130"
+},
+
+"Batik Dan Tenun":{
+penerbit:"Angga, 2009",
+ringkasan:"Buku Batik dan Tenun menjelaskan tentang dua warisan budaya Indonesia yang sangat penting, yaitu batik dan tenun. Di dalamnya dibahas sejarah munculnya batik sebagai kain bermotif yang dibuat dengan teknik malam (lilin), serta tenun yang dibuat dengan cara menganyam benang secara tradisional. Buku ini juga mengenalkan berbagai motif khas daerah beserta maknanya, seperti motif batik Parang, Kawung, dan Mega Mendung, serta kain tenun ikat dari Nusa Tenggara Timur. Selain itu, buku ini menekankan nilai budaya, filosofi, dan keunikan setiap daerah dalam menghasilkan karya tekstil yang menjadi identitas bangsa Indonesia.",
+gambar:"https://iili.io/C3Bv70N.jpg",
+Stok :"130"
+},
+
+"Mengenal Musik Seni Dan Lagu":{
+penerbit:"Weni R, 2009",
+ringkasan:"Buku Mengenal Seni Musik dan Lagu membahas dasar-dasar seni musik dengan bahasa yang sederhana sehingga mudah dipahami oleh pelajar. Materinya mencakup pengertian musik sebagai bahasa universal, unsur-unsur musik seperti nada, tempo, dan dinamika, serta cara memahami dan menyanyikan lagu dengan baik dan benar. Selain itu, buku ini mengenalkan berbagai jenis lagu, seperti lagu nasional, lagu daerah, dan lagu tradisional, beserta pentingnya memahami nilai budaya yang terkandung di dalamnya. Melalui pembahasan tersebut, pembaca diharapkan dapat meningkatkan pengetahuan, keterampilan, dan apresiasi terhadap seni musik serta mampu menikmati dan melestarikan warisan musik Indonesia.",
+gambar:"https://iili.io/CcNIEjs.jpg",
+Stok :"130"
+},
+
+"Mengenal Warna":{
+penerbit:"honi, 2011",
+ringkasan:"Buku Mengenal Warna merupakan buku pembelajaran untuk anak usia prasekolah yang bertujuan mengenalkan berbagai warna dasar melalui contoh benda-benda yang sering dijumpai dalam kehidupan sehari-hari. Buku ini memperkenalkan sekitar sebelas jenis warna dengan ilustrasi yang menarik sehingga memudahkan anak mengenali dan membedakan setiap warna. Materi disusun menggunakan bahasa yang sederhana dan mudah dipahami, sehingga dapat digunakan sebagai media belajar di rumah maupun di sekolah dengan pendampingan orang tua atau guru. Selain membantu mengenal warna, buku ini juga melatih kemampuan mengamati, mengingat, dan memperkaya kosakata anak sejak usia dini.",
+gambar:"https://iili.io/C3Bgo4R.jpg",
+Stok :"130"
+},
+
+"Membatik":{
+penerbit:"Zaitun, 2019",
+ringkasan:"Buku Membatik Tulis membahas dasar-dasar seni membatik sebagai salah satu warisan budaya Indonesia yang memiliki nilai seni dan ekonomi tinggi. Materi di dalamnya mencakup pengenalan sejarah batik, alat dan bahan yang digunakan, teknik membuat pola, penggunaan canting dan malam, proses pewarnaan, hingga tahap pelorodan dan penyelesaian hasil batik. Selain memberikan pengetahuan teori, buku ini juga dilengkapi dengan langkah-langkah praktik yang sistematis sehingga peserta didik dapat memahami sekaligus mempraktikkan proses membatik dengan benar. Melalui buku ini, pembaca diharapkan mampu mengembangkan keterampilan membatik, menumbuhkan kreativitas, serta meningkatkan rasa bangga terhadap budaya bangsa Indonesia.",
+gambar:"https://iili.io/C3BrgUl.jpg",
+Stok :"130"
+},
+
+"Keragaman Tari Nusantara":{
+penerbit:"Ari Subekti, 2018",
+ringkasan:"Buku Keragaman Tari Nusantara membahas kekayaan seni tari tradisional yang dimiliki Indonesia sebagai bagian dari warisan budaya bangsa. Di dalamnya dijelaskan pengertian tari, unsur-unsur tari, bentuk dan jenis karya tari, pola lantai, simbol gerak, kostum, serta iringan musik yang digunakan dalam berbagai tarian daerah. Buku ini juga memperkenalkan berbagai contoh tari tradisional dari berbagai wilayah di Indonesia beserta keunikan dan nilai budaya yang terkandung di dalamnya. Selain menambah wawasan tentang seni tari, buku ini bertujuan menumbuhkan rasa cinta terhadap budaya Indonesia serta mendorong generasi muda untuk menjaga dan melestarikan keberagaman tari nusantara sebagai identitas bangsa.",
+gambar:"https://iili.io/C3B4jrx.jpg",
+Stok :"130"
+},
+
+"Aneka Tari Anak-Anak":{
+penerbit:"Intan Pariwara, 2018",
+ringkasan:"Buku Aneka Tari Anak-Anak memperkenalkan berbagai jenis tarian yang dirancang khusus untuk anak-anak dengan gerakan yang sederhana dan mudah dipraktikkan. Di dalamnya terdapat beragam contoh tari, seperti Tari Kumbang dan Tari Petak Umpet, yang disajikan lengkap dengan ilustrasi sehingga memudahkan anak mengikuti setiap gerakan. Buku ini bertujuan menumbuhkan minat anak terhadap seni tari, melatih koordinasi gerak, meningkatkan rasa percaya diri, serta mengenalkan nilai-nilai budaya melalui kegiatan yang menyenangkan. Dengan bahasa yang ringan dan gambar yang menarik, buku ini cocok digunakan sebagai media pembelajaran seni budaya di sekolah maupun sebagai panduan berlatih tari di rumah.",
+gambar:"https://iili.io/C3B6Zcx.jpg",
+Stok :"130"
+},
+
+"Batikku":{
+penerbit:"Ani Bambang Yudhoyono, 2010",
+ringkasan:"Buku Batikku: Pengabdian Cinta Tak Berkata mengangkat kisah, filosofi, dan keindahan batik sebagai salah satu warisan budaya Indonesia yang memiliki nilai seni dan makna yang sangat tinggi. Melalui buku ini, penulis mengajak pembaca untuk memahami bahwa setiap lembar kain batik tidak hanya merupakan hasil karya seni, tetapi juga buah dari kerja keras, ketekunan, kreativitas, dan semangat gotong royong para perajin batik. Buku ini juga menggambarkan proses pembuatan batik, keragaman motif dari berbagai daerah di Indonesia, serta pentingnya menjaga dan melestarikan batik sebagai identitas bangsa. Penulis berharap generasi muda semakin mencintai, menghargai, dan ikut melestarikan batik agar warisan budaya Indonesia tetap dikenal dan diwariskan kepada generasi berikutnya.",
+gambar:"https://iili.io/C3BsfjI.jpg",
+Stok :"130"
+},
+
+"Membuat Karakter":{
+penerbit:"Andi Publisher, 2012",
+ringkasan:"Buku Membuat Karakter & Animasi Game dengan 3ds Max 2012 membahas langkah-langkah membuat karakter tiga dimensi (3D) dan animasi game menggunakan perangkat lunak 3ds Max 2012. Materi dimulai dari pengenalan konsep dasar pemodelan objek 3D, proses pembuatan karakter, pemberian tekstur, pengaturan tulang (rigging), hingga proses animasi dan rendering. Buku ini disusun secara bertahap dengan contoh dan ilustrasi sehingga memudahkan pembaca, terutama pemula, untuk memahami teknik pembuatan karakter game yang menarik dan profesional. Selain itu, buku ini juga memberikan panduan praktis agar hasil desain dapat digunakan dalam pengembangan game maupun animasi digital.",
+gambar:"https://iili.io/C3BLNb2.jpg",
+Stok :"130"
+},
+
+"Mengenal Seni Tari":{
+penerbit:"Keni Andewi, 2010",
+ringkasan:"Buku Mengenal Seni Tari membahas dasar-dasar seni tari sebagai salah satu bentuk seni yang menggunakan gerak tubuh sebagai media utama untuk menyampaikan pesan, emosi, dan keindahan. Buku ini menjelaskan pengertian seni tari, unsur-unsur tari seperti gerak, ruang, waktu, dan tenaga, serta fungsi tari dalam kehidupan masyarakat, baik sebagai sarana hiburan, pendidikan, upacara adat, maupun pertunjukan. Selain itu, buku ini juga memperkenalkan berbagai jenis tari beserta nilai budaya yang terkandung di dalamnya sehingga pembaca dapat memahami pentingnya seni tari sebagai bagian dari warisan budaya yang perlu dijaga, dipelajari, dan dilestarikan oleh generasi muda.",
+gambar:"https://iili.io/C3BZuyv.jpg",
+Stok :"130"
+},
+
+"Mengenal Alat Musik":{
+penerbit:"Rima Yuliastuti, 2010",
+ringkasan:"Buku Mengenal Alat Musik untuk SD dan SMP membahas berbagai jenis alat musik yang ada di Indonesia maupun mancanegara dengan bahasa yang mudah dipahami oleh pelajar. Pembaca diperkenalkan pada alat musik tradisional dari berbagai daerah di Indonesia, seperti gamelan, angklung, sasando, dan kolintang, beserta asal daerah, cara memainkan, dan fungsi alat musik tersebut dalam kehidupan masyarakat. Selain itu, buku ini juga mengenalkan alat musik modern dan alat musik dari negara lain sehingga menambah wawasan tentang keberagaman budaya musik di dunia. Dilengkapi dengan ilustrasi yang menarik, buku ini bertujuan membantu siswa memahami jenis-jenis alat musik sekaligus menumbuhkan rasa cinta terhadap seni dan budaya.",
+gambar:"https://iili.io/C3BNDKP.jpg",
+Stok :"130"
+},
+
+"Jelajahi Informasi Menggunakan Internet":{
+penerbit:"Rima Yulia, 2010",
+ringkasan:"Buku Jelajahi Informasi Menggunakan Internet membahas cara memanfaatkan internet sebagai sumber informasi dan sarana belajar. Pembaca diperkenalkan pada pengertian internet, penggunaan peramban (browser), mesin pencari, serta langkah-langkah mencari informasi yang benar, cepat, dan aman. Selain itu, buku ini juga mengajarkan pentingnya memilih sumber informasi yang terpercaya, menjaga etika dalam menggunakan internet, serta memanfaatkan teknologi digital untuk mendukung kegiatan belajar dan menambah wawasan.",
+gambar:"https://iili.io/C3BDzmv.jpg",
+Stok :"130"
+},
+
+"Solusi Cepat Bisa Microsoft Office":{
+penerbit:"Alfa Hartoko, 2019",
+ringkasan:"Buku Solusi Cepat Bisa Microsoft Office 2016 membahas cara menggunakan aplikasi Microsoft Office 2016, khususnya Microsoft Word, Microsoft Excel, dan Microsoft PowerPoint, dengan langkah-langkah yang mudah dipahami oleh pemula maupun pengguna umum. Materi dimulai dari pengenalan setiap aplikasi, penggunaan fitur-fitur dasar hingga lanjutan, serta dilengkapi contoh latihan dan studi kasus yang dapat diterapkan dalam kegiatan belajar, administrasi, maupun pekerjaan sehari-hari. Buku ini bertujuan membantu pembaca menguasai Microsoft Office secara cepat dan praktis sehingga mampu membuat dokumen, mengolah data, serta menyusun presentasi secara efektif dan profesional.",
+gambar:"https://iili.io/C3BmRUX.jpg",
+Stok :"130"
+},
+
+"Elektronik Di Rumah Kita":{
+penerbit:"Hadi Karyanto, 2018",
+ringkasan:"Buku Elektronik di Rumah Kita membahas berbagai peralatan elektronik yang sering digunakan dalam kehidupan sehari-hari, seperti televisi, kulkas, mesin cuci, komputer, dan peralatan rumah tangga lainnya. Buku ini menjelaskan fungsi, cara kerja, penggunaan yang benar, serta cara merawat peralatan elektronik agar tetap awet dan hemat energi. Dengan bahasa yang sederhana dan mudah dipahami, buku ini membantu pembaca mengenal pentingnya peralatan elektronik dalam menunjang berbagai aktivitas di rumah sekaligus menumbuhkan kesadaran untuk menggunakan teknologi secara bijak dan efisien.",
+gambar:"https://iili.io/C3ByV9e.jpg",
+Stok :"130"
+},
+
+"Dasar-Dasar Microsoft Excel":{
+penerbit:"Karyanto, 2015",
+ringkasan:"Buku Dasar-Dasar Microsoft Excel untuk Kesiapan Kerja membahas cara menggunakan Microsoft Excel mulai dari tingkat dasar hingga keterampilan yang dibutuhkan di dunia kerja. Materi yang disajikan meliputi pengenalan antarmuka Excel, pengolahan data, penggunaan rumus dan fungsi dasar, pembuatan tabel serta grafik, hingga penyajian data yang rapi dan mudah dipahami. Dengan bahasa yang sederhana dan contoh-contoh praktis, buku ini dirancang untuk membantu pelajar, mahasiswa, maupun masyarakat umum mengembangkan kemampuan mengoperasikan Microsoft Excel secara efektif sebagai bekal dalam kegiatan belajar maupun pekerjaan.",
+gambar:"https://iili.io/C3C9Pee.jpg",
+Stok :"130"
+},
+
+"Alat Komunikasi":{
+penerbit:"Ervina Fitriani, 2013",
+ringkasan:"Buku Alat Komunikasi membahas berbagai jenis alat komunikasi yang digunakan manusia, mulai dari alat komunikasi tradisional hingga alat komunikasi modern. Pembaca diajak memahami fungsi setiap alat komunikasi, sejarah perkembangannya, serta manfaatnya dalam mempermudah penyampaian informasi antarindividu. Buku ini disajikan dengan bahasa yang sederhana dan disertai ilustrasi yang menarik sehingga mudah dipahami oleh anak-anak, sekaligus membantu menambah pengetahuan tentang perkembangan teknologi komunikasi dalam kehidupan sehari-hari.",
+gambar:"https://iili.io/C3Bb5wx.jpg",
+Stok :"130"
+},
+
+
+
+
+};
+
+/* ================= STOK PER KATEGORI (tanpa database) ================= */
+
+let kategoriBuku = {};
+
+function buildKategoriBuku(){
+  let headers = document.querySelectorAll("#bukuPage h3");
+  headers.forEach(h=>{
+    // hapus emoji, ambil teks kategori saja
+    let namaKategori = h.textContent.replace(/[^\w\s]/gi, '').trim().toLowerCase();
+    let bukuDiv = h.nextElementSibling;
+    if(bukuDiv && bukuDiv.classList.contains("books")){
+      let judulList = Array.from(bukuDiv.querySelectorAll(".book"))
+        .map(b => b.dataset.title);
+      kategoriBuku[namaKategori] = judulList;
+    }
+  });
+}
+
+buildKategoriBuku();
+
+function cekStokKategori(keyword){
+  let key = Object.keys(kategoriBuku).find(k => k.includes(keyword));
+  if(!key) return null;
+
+  let daftarJudul = kategoriBuku[key];
+  let totalJudul = daftarJudul.length;
+  let totalStok = 0;
+
+  daftarJudul.forEach(j=>{
+    let d = detailBuku[j];
+    if(d && d.Stok) totalStok += parseInt(d.Stok);
+  });
+
+  return { kategori:key, totalJudul, totalStok, daftarJudul };
+}
+
+
+/* PENCARIAN BUKU */
+
+function cariBuku(){
+
+let keyword = document
+.getElementById("searchBook")
+.value
+.toLowerCase();
+
+let semuaBuku = document.querySelectorAll(".book");
+
+semuaBuku.forEach(buku=>{
+
+let judul = buku.dataset.title.toLowerCase();
+
+if(judul.includes(keyword)){
+buku.style.display = "block";
+}else{
+buku.style.display = "none";
+}
+
+});
+
+}
+
+/* NAVIGASI */
+
+function show(id){
+
+['formPage','bukuPage','detailPage','riwayatPage','chatPage']
+.forEach(p=>document.getElementById(p).classList.add('hidden'));
+
+document.getElementById(id).classList.remove('hidden');
+
+}
+
+/* AUTO TANGGAL */
+
+tglPinjam.addEventListener("change", function(){
+
+let pinjam = new Date(this.value);
+
+if(!isNaN(pinjam)){
+
+pinjam.setDate(pinjam.getDate() + 3);
+
+let tahun = pinjam.getFullYear();
+let bulan = String(pinjam.getMonth()+1).padStart(2,'0');
+let hari = String(pinjam.getDate()).padStart(2,'0');
+
+tglKembali.value = `${tahun}-${bulan}-${hari}`;
+
+}
+
+});
+
+/* FORM */
+
+function lanjut(){
+
+dataSementara = {
+
+nama:nama.value,
+usia:usia.value,
+alamat:alamat.value,
+jenis_kelamin:jenis_kelamin.value,
+tglPinjam:tglPinjam.value,
+tglKembali:tglKembali.value,
+keperluan:keperluan.value
+
+};
+
+if(!dataSementara.nama || !dataSementara.jenis_kelamin){
+
+alert("Isi semua data dulu!");
+return;
+
+}
+
+show('bukuPage');
+
+}
+
+/* PILIH BUKU */
+
+books.forEach(b=>{
+
+b.onclick=()=>{
+
+bukuDipilih=b.dataset.title;
+
+let d=detailBuku[bukuDipilih];
+
+detailJudul.innerHTML=bukuDipilih;
+
+detailPenerbit.innerHTML=d?d.penerbit:"Belum tersedia";
+
+detailRingkasan.innerHTML=d?d.ringkasan:"Ringkasan belum tersedia.";
+
+detailImg.src=d?d.gambar:b.querySelector("img").src;
+
+show("detailPage");
+
+}
+
+});
+
+function pinjamBuku(){
+
+let r=JSON.parse(localStorage.getItem("data"))||[];
+
+r.push({
+
+...dataSementara,
+
+buku:bukuDipilih
+
+});
+
+localStorage.setItem("data",JSON.stringify(r));
+
+tampil();
+
+show("riwayatPage");
+
+}
+
+/* RIWAYAT */
+
+function tampil(){
+
+let r = JSON.parse(localStorage.getItem("data")) || [];
+
+riwayatList.innerHTML = "";
+
+r.forEach((d,i)=>{
+
+riwayatList.innerHTML += `
+
+<div>
+
+<b>${i+1}. ${d.nama}</b><br><br>
+
+Usia : ${d.usia}<br>
+Alamat : ${d.alamat}<br>
+Jenis Kelamin : ${d.jenis_kelamin}<br>
+Buku : ${d.buku}<br>
+Tanggal Pinjam : ${d.tglPinjam}<br>
+Tanggal Kembali : ${d.tglKembali}<br>
+Keperluan : ${d.keperluan}
+
+<hr>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* CHATBOT */
+
+function kirimPesan(){
+
+let text = chatInput.value.toLowerCase().trim();
+
+if(!text) return;
+
+lastMessage = text;
+
+chatBox.innerHTML += `
+<div class="chat user">${text}</div>
+`;
+
+if(
+text.includes("halo") ||
+text.includes("hai") ||
+text.includes("hello") ||
+text.includes("selamat pagi") ||
+text.includes("selamat siang") ||
+text.includes("selamat sore")
+){
+res = "Halo 👋 Selamat datang di Perpustakaan SMPN 2 Kelapa Dua. Ada yang bisa saya bantu?";
+}
+
+// CEK STOK SEMUA BUKU
+else if(
+    text.includes("stok") &&
+    !text.includes("bahasa indonesia") &&
+    !text.includes("bahasa inggris") &&
+    !text.includes("matematika") &&
+    !text.includes("ipa") &&
+    !text.includes("ips") &&
+    !text.includes("novel") &&
+    !text.includes("pai") &&
+    !text.includes("agama") &&
+    !text.includes("penjas") &&
+    !text.includes("pkn") &&
+    !text.includes("seni budaya") &&
+    !text.includes("tik") &&
+    !text.includes("kepulauan")
+){
+
+    let daftarStok = "";
+
+    Object.keys(detailBuku).forEach((judul, index) => {
+
+        let buku = detailBuku[judul];
+
+        let stok = buku.Stok ?? 0;
+
+        daftarStok += `
+        ${index + 1}. 📖 <b>${judul}</b><br>
+        &nbsp;&nbsp;&nbsp;📦 Stok: <b>${stok} buku</b><br><br>
+        `;
+    });
+
+    res = `
+    📚 <b>Ketersediaan Stok Semua Buku</b><br><br>
+    ${daftarStok}
+    `;
+}
+
+else if(
+  text.includes("stok") &&
+  (
+    text.includes("bahasa indonesia") ||
+    text.includes("bahasa inggris") ||
+    text.includes("matematika") ||
+    text.includes("ipa") ||
+    text.includes("ips") ||
+    text.includes("novel") ||
+    text.includes("pai") ||
+    text.includes("agama") ||
+    text.includes("penjas") ||
+    text.includes("pkn") ||
+    text.includes("seni budaya") ||
+    text.includes("tik") ||
+    text.includes("kepulauan")
+  )
+){
+
+  let kategoriCari = "";
+
+  if(text.includes("bahasa indonesia")) kategoriCari = "bahasa indonesia";
+  else if(text.includes("bahasa inggris")) kategoriCari = "bahasa inggris";
+  else if(text.includes("matematika")) kategoriCari = "matematika";
+  else if(text.includes("ipa")) kategoriCari = "ipa";
+  else if(text.includes("ips")) kategoriCari = "ips";
+  else if(text.includes("novel")) kategoriCari = "novel";
+  else if(text.includes("pai") || text.includes("agama")) kategoriCari = "pendidikan agama islam";
+  else if(text.includes("penjas")) kategoriCari = "penjas";
+  else if(text.includes("pkn")) kategoriCari = "pkn";
+  else if(text.includes("seni budaya")) kategoriCari = "seni budaya";
+  else if(text.includes("tik")) kategoriCari = "tik";
+  else if(text.includes("kepulauan")) kategoriCari = "kepulauan";
+
+  let hasil = cekStokKategori(kategoriCari);
+
+  if(hasil){
+    res = `📚 <b>Stok Kategori ${hasil.kategori.toUpperCase()}</b><br><br>
+    Jumlah judul buku: ${hasil.totalJudul}<br>
+    Total stok buku: ${hasil.totalStok}<br><br>
+    Contoh judul: ${hasil.daftarJudul.slice(0,5).join(", ")}${hasil.totalJudul>5 ? ", dll" : ""}`;
+  } else {
+    res = "Maaf, kategori buku yang Anda maksud tidak ditemukan.";
+  }
+
+}
+
+else if(
+text.includes("buka") &&
+(
+text.includes("jam") ||
+text.includes("operasional") ||
+text.includes("jadwal") ||
+text.includes("kapan")
+)
+){
+res = "Perpustakaan buka setiap Senin - Jumat pukul 08.00 - 16.00 WIB 📚";
+}
+
+else if(
+(
+text.includes("tutup") ||
+text.includes("selesai")
+) &&
+(
+text.includes("jam") ||
+text.includes("operasional") ||
+text.includes("pelayanan") ||
+text.includes("kapan")
+)
+){
+res = "Perpustakaan tutup pukul 16.00 WIB.";
+}
+
+else if(
+(
+text.includes("alamat") ||
+text.includes("lokasi") ||
+text.includes("letak") ||
+text.includes("dimana") ||
+text.includes("di mana")
+) &&
+text.includes("perpustakaan")
+){
+res = "Perpustakaan berada di lingkungan SMPN 2 Kelapa Dua 🏫";
+}
+
+else if(
+(text.includes("pinjam") || text.includes("peminjaman")) &&
+text.includes("buku")
+){
+res = "Silakan isi formulir peminjaman lalu pilih buku yang ingin dipinjam 📖";
+}
+
+else if(
+(text.includes("kembali") ||
+text.includes("pengembalian") ||
+text.includes("mengembalikan")) &&
+text.includes("buku")
+){
+res = "Buku dapat dikembalikan sebelum tanggal jatuh tempo.";
+}
+
+else if(
+(text.includes("lama") ||
+text.includes("berapa hari") ||
+text.includes("durasi")) &&
+(text.includes("pinjam") ||
+text.includes("peminjaman"))
+){
+res = "Masa peminjaman buku adalah 7 hari 📅";
+}
+
+else if(
+text.includes("denda") ||
+text.includes("terlambat") ||
+text.includes("sanksi")
+){
+res = "Denda keterlambatan pengembalian adalah Rp1.000 per hari 💰";
+}
+
+else if(
+text.includes("wifi") ||
+text.includes("wi-fi") ||
+text.includes("internet")
+){
+res = "WiFi tersedia di area perpustakaan 📶";
+}
+
+// Buku Tidak Tersedia
+else if(
+text.includes("tidak tersedia") ||
+text.includes("stok habis") ||
+text.includes("habis") ||
+text.includes("kosong")
+){
+res = `Maaf, buku yang Anda cari sedang tidak tersedia 😔<br><br>
+Silakan hubungi petugas perpustakaan melalui WhatsApp:<br>
+<a href="https://wa.me/6287730057526" target="_blank">📲 Hubungi Petugas</a>`;
+}
+
+else if(
+text.includes("anggota") ||
+text.includes("kartu anggota") ||
+text.includes("member")
+){
+res = "Seluruh siswa SMPN 2 Kelapa Dua dapat menjadi anggota perpustakaan.";
+}
+
+else if(
+text.includes("novel")
+){
+res = "Novel tersedia pada kategori Fiksi. Salah satu rekomendasi novel adalah Hafalan Shalat Delisa 📚";
+}
+
+else if(
+text.includes("matematika")
+){
+res = `Buku Matematika tersedia pada kategori Matematika.<br>
+• Kelas 7 : Rak paling atas.<br>
+• Kelas 8 : Rak bagian tengah.<br>
+• Kelas 9 : Rak paling bawah.`;
+}
+
+else if(
+text.includes("ipa")
+){
+res = "Buku IPA tersedia pada kategori IPA.";
+}
+
+else if(
+text.includes("ips")
+){
+res = "Buku IPS tersedia pada kategori IPS.";
+}
+
+else if(
+text.includes("agama") ||
+text.includes("pai")
+){
+res = "Buku Pendidikan Agama tersedia pada kategori PAI.";
+}
+
+else if(
+text.includes("informatika") ||
+text.includes("komputer")
+){
+res = "Buku Informatika tersedia pada kategori Informatika.";
+}
+
+else if(
+text.includes("siapa kamu") ||
+text.includes("nama kamu") ||
+text.includes("kamu siapa")
+){
+res = "Saya adalah Chatbot Perpustakaan SMPN 2 Kelapa Dua 🤖";
+}
+
+else if(
+text.includes("terima kasih") ||
+text.includes("makasih") ||
+text.includes("thanks")
+){
+res = "Sama-sama 😊 Senang bisa membantu.";
+}
+
+// Cari Buku
+else if(
+(text.includes("cari") ||
+text.includes("ada")) &&
+text.includes("buku")
+){
+res = "Silakan tuliskan judul buku yang ingin Anda cari. Jika buku tidak tersedia, Anda dapat menghubungi petugas melalui WhatsApp.";
+}
+
+// Jumlah Buku
+else if(
+text.includes("jumlah buku") ||
+text.includes("berapa buku") ||
+text.includes("koleksi")
+){
+res = "Perpustakaan memiliki berbagai koleksi buku pelajaran, novel, ensiklopedia, dan buku referensi.";
+}
+
+// Maksimal Peminjaman
+else if(
+text.includes("maksimal") ||
+text.includes("berapa buku boleh dipinjam")
+){
+res = "Setiap siswa dapat meminjam maksimal 2 buku dalam satu kali peminjaman.";
+}
+
+// Perpanjangan Peminjaman
+else if(
+text.includes("perpanjang") ||
+text.includes("perpanjangan")
+){
+res = "Peminjaman buku dapat diperpanjang apabila buku tersebut belum dipesan oleh peminjam lain.";
+}
+
+// Kehilangan Buku
+else if(
+text.includes("hilang")
+){
+res = "Apabila buku hilang, peminjam wajib mengganti dengan buku yang sama atau sesuai ketentuan perpustakaan.";
+}
+
+// Buku Rusak
+else if(
+text.includes("rusak")
+){
+res = "Apabila buku rusak selama masa peminjaman, peminjam wajib melapor kepada petugas perpustakaan.";
+}
+
+// Fasilitas
+else if(
+text.includes("fasilitas") ||
+text.includes("ruang baca")
+){
+res = "Perpustakaan menyediakan ruang baca, WiFi, meja belajar, dan koleksi buku yang dapat dibaca di tempat.";
+}
+
+// Membaca di Tempat
+else if(
+text.includes("baca di tempat") ||
+text.includes("membaca")
+){
+res = "Pengunjung dapat membaca buku di ruang baca tanpa harus meminjamnya.";
+}
+
+
+// Tata Tertib
+else if(
+text.includes("peraturan") ||
+text.includes("tata tertib")
+){
+res = "Mohon menjaga ketenangan, tidak makan dan minum di area koleksi buku, serta menjaga kebersihan perpustakaan.";
+}
+
+// Buku Baru
+else if(
+text.includes("buku baru") ||
+text.includes("koleksi baru")
+){
+res = "Informasi koleksi buku terbaru dapat ditanyakan langsung kepada petugas perpustakaan.";
+}
+
+// Donasi Buku
+else if(
+text.includes("donasi") ||
+text.includes("sumbang")
+){
+res = "Perpustakaan menerima donasi buku yang masih layak baca. Silakan hubungi petugas.";
+}
+
+// Petugas
+else if(
+text.includes("petugas") ||
+text.includes("admin")
+){
+res = `Silakan menghubungi petugas melalui WhatsApp:<br>
+<a href="https://wa.me/6287730057526" target="_blank">📲 Chat Petugas</a>`;
+}
+
+// CARI BUKU BERDASARKAN JUDUL
+else if(
+    Object.keys(detailBuku).some(judul =>
+        text.includes(judul.toLowerCase())
+    )
+){
+
+    let judulDitemukan = Object.keys(detailBuku).find(judul =>
+        text.includes(judul.toLowerCase())
+    );
+
+    let buku = detailBuku[judulDitemukan];
+
+    // DAFTAR FILE BUKU
+    let fileBuku = {
+
+        "Bahasa Inggris":"Buku/Bahasa-inggris-BS-KLS-XI-efc.pdf",
+
+        "Always English": "buku/always english.pdf",
+
+        "English Is Cool": "buku/english is cool.pdf",
+
+        "Briliant Step": "buku/briliant step.pdf",
+
+        "Cerdas Bahasa Inggris": "buku/cerdas bahasa inggris.pdf",
+
+        "Inggris For Nusantara": "buku/inggris for nusantara.pdf",
+
+        "I Love English": "buku/i love english.pdf",
+
+        "Speak English": "buku/speak english.pdf",
+
+        "Delisa": "buku/hafalan shalat delisa.pdf",
+
+        "Mengenal Lingkungan Sekitar Kita": "buku/mengenal lingkungan sekitar kita.pdf",
+
+        "Merdeka": "buku/merdeka.pdf",
+
+        "Indonesia Jaya": "buku/indonesia jaya.pdf",
+
+        "Papua": "buku/papua.pdf",
+
+        "Segitiga": "buku/segitiga.pdf",
+
+        "Olahraga Alam": "buku/olahraga alam.pdf",
+
+        "Ideologi Negara": "buku/ideologi negara.pdf",
+
+        "Batikku": "buku/batikku.pdf",
+
+        "Alat Komunikasi": "buku/alat komunikasi.pdf"
+
+    };
+
+    // CARI FILE SESUAI JUDUL
+    let file = fileBuku[judulDitemukan];
+
+    res = `
+📚 <b>${judulDitemukan}</b><br><br>
+
+🏢 Penerbit: ${buku.penerbit}<br><br>
+
+📦 <b>Stok: ${buku.Stok} buku</b><br><br>
+
+📖 <b>Ringkasan:</b><br>
+${buku.ringkasan}<br><br>
+
+${
+    file
+    ?
+    `<a href="${file}" target="_blank">
+        📄 <b>Buka / Baca File Buku</b>
+     </a>`
+    :
+    `📄 File buku belum tersedia.`
+}
+    `;
+}
+
+// Kontak
+else if(
+text.includes("nomor wa") ||
+text.includes("whatsapp") ||
+text.includes("kontak")
+){
+res = `Nomor WhatsApp perpustakaan:<br>
+<a href="https://wa.me/6287730057526" target="_blank">📲 Hubungi Admin</a>`;
+}
+
+else{
+res = "Maaf, saya belum memahami pertanyaan tersebut. Silakan tanyakan tentang jam buka, peminjaman buku, pengembalian buku, denda, lokasi perpustakaan, atau koleksi buku 📚";
+}
+
+
+setTimeout(()=>{
+
+chatBox.innerHTML += `
+<div class="chat bot">${res}</div>
+`;
+
+chatBox.scrollTop = chatBox.scrollHeight;
+
+},500);
+
+chatInput.value = "";
+
+}
+
+/* WHATSAPP */
+
+function kirimWA(){
+
+if(!lastMessage){
+
+alert("Chat dulu!");
+return;
+
+}
+
+let pesan = `Nama: ${nama.value}
+Usia: ${usia.value}
+Alamat: ${alamat.value}
+Jenis Kelamin: ${jenis_kelamin.value}
+
+Pesan: ${lastMessage}`;
+
+let no = "6287730057526";
+
+let url = `https://wa.me/${no}?text=${encodeURIComponent(pesan)}`;
+
+console.log(url);
+alert(url);
+
+window.open(url,"_blank");
+
+}
+
+</script>
+
+</body>
+</html>
+```
